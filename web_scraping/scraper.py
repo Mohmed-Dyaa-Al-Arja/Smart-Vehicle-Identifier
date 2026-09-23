@@ -16,7 +16,7 @@ from PIL import Image
 
 from .search import VehicleSearchClient
 from .google_lens import GoogleLensClient
-from .web_requests import HTTPClient
+from .requests import HTTPClient
 from .playwright import BrowserSession
 from .parser import HTMLParser
 from .extractor import VehicleExtractor

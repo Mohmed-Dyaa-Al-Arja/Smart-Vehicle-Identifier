@@ -1,184 +1,3739 @@
 /* ==========================================================================
-   Chat bubbles (simple / legacy)
+   VEHICLE VISION AI — AI CHAT
+   FUTURISTIC BLUE / NAVY / CYAN
+   LIGHT + DARK
+   ENGLISH + ARABIC
    ========================================================================== */
 
-.vv-chat-bubble-user {
-  background: var(--color-primary);
-  color: white;
-  border-radius: var(--radius-md) var(--radius-md) 2px var(--radius-md);
-  padding: var(--space-3) var(--space-4);
-  margin-left: 20%;
-  margin-bottom: var(--space-3);
+
+/* ==========================================================================
+   PAGE
+   ========================================================================== */
+
+.vv-chat-page {
+
+    width: 100%;
+
+    color:
+        var(--color-text-primary, #0F172A);
+
 }
 
-.vv-chat-bubble-ai {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  color: var(--color-text-primary);
-  border-radius: var(--radius-md) var(--radius-md) var(--radius-md) 2px;
-  padding: var(--space-3) var(--space-4);
-  margin-right: 20%;
-  margin-bottom: var(--space-3);
+.vv-chat-page-rtl {
+
+    direction: rtl;
+
+    text-align: right;
+
+}
+
+.vv-chat-page-ltr {
+
+    direction: ltr;
+
+    text-align: left;
+
 }
 
 
 /* ==========================================================================
-   AI Chat page
+   BACKGROUND
    ========================================================================== */
 
-.vv-chat-card {
-  background: var(--color-bg);
-  border: 1px solid var(--color-border);
-  border-radius: 16px;
-  padding: 22px;
-  margin-bottom: 18px;
-  box-shadow: var(--shadow-sm);
+[data-testid="stAppViewContainer"] .main .block-container {
+
+    background:
+
+        radial-gradient(
+            900px 500px at 10% -10%,
+            rgba(37, 99, 235, 0.08),
+            transparent 65%
+        ),
+
+        radial-gradient(
+            800px 450px at 100% 0%,
+            rgba(14, 165, 233, 0.07),
+            transparent 60%
+        );
+
+    transition:
+        background 0.4s ease;
+
 }
 
-.vv-chat-card-title {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 1rem;
-  font-weight: 700;
-  color: var(--color-text-primary);
-  margin-bottom: 12px;
+
+[data-theme="dark"]
+[data-testid="stAppViewContainer"]
+.main
+.block-container {
+
+    background:
+
+        radial-gradient(
+            1000px 550px at 8% -12%,
+            rgba(37, 99, 235, 0.16),
+            transparent 65%
+        ),
+
+        radial-gradient(
+            850px 500px at 100% 0%,
+            rgba(14, 165, 233, 0.12),
+            transparent 60%
+        );
+
 }
 
-.vv-chat-card-desc { color: var(--color-text-secondary); font-size: .86rem; line-height: 1.8; }
 
-.vv-chat-info { background: rgba(37,99,235,.08); border: 1px solid rgba(37,99,235,.20); }
+/* ==========================================================================
+   MAIN CHAT CARD
+   ========================================================================== */
 
-.vv-chat-perks { margin-top: 15px; padding-left: 18px; color: var(--color-text-secondary); line-height: 2; }
-.vv-chat-perks li { margin-bottom: 4px; }
+.st-key-vv-chat-main-shell {
 
-.vv-chat-suggest-label { color: white; font-size: .92rem; font-weight: 700; }
+    box-sizing: border-box;
 
-.vv-chat-header {
-  background: var(--color-bg);
-  border: 1px solid var(--color-border);
-  border-radius: 16px;
-  padding: 20px 24px;
-  display: flex;
-  align-items: center;
-  gap: 18px;
-  box-shadow: var(--shadow-sm);
+    width: 100%;
+
+    position: relative;
+
+    overflow: hidden;
+
+    margin-top: 12px;
+
+    padding:
+        20px
+        22px
+        13px
+        22px !important;
+
+    border:
+        1px solid
+        var(--color-border, #E2E8F0);
+
+    border-radius:
+        20px;
+
+    background:
+        var(--color-bg, #FFFFFF);
+
+    box-shadow:
+
+        0 18px 45px -30px
+        rgba(15, 23, 42, 0.35),
+
+        0 0 0 1px
+        rgba(37, 99, 235, 0.025);
+
+    transition:
+
+        box-shadow 0.35s ease,
+        transform 0.35s ease,
+        border-color 0.35s ease;
+
 }
 
-.vv-chat-bot-icon {
-  width: 52px;
-  height: 52px;
-  border-radius: 14px;
-  background: linear-gradient(135deg, #2563EB, #3B82F6);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 24px;
-  color: white;
+
+/* ==========================================================================
+   ✨ OUTER CHAT ENERGY
+   ========================================================================== */
+
+.st-key-vv-chat-main-shell::before {
+
+    content: "";
+
+    position: absolute;
+
+    top: -90px;
+
+    right: -90px;
+
+    width: 270px;
+
+    height: 270px;
+
+    border-radius: 50%;
+
+    background:
+
+        radial-gradient(
+            circle,
+            rgba(37, 99, 235, 0.14),
+            transparent 70%
+        );
+
+    filter:
+        blur(2px);
+
+    pointer-events:
+        none;
+
+    animation:
+        vv-corner-breathe 5s ease-in-out infinite;
+
 }
 
-.vv-chat-header h2 { margin: 0; font-size: 1.15rem; color: white; }
-.vv-chat-header p { margin-top: 4px; color: var(--color-text-secondary); font-size: .82rem; }
 
-.vv-chat-shell {
-  margin-top: 18px;
-  background: var(--color-bg);
-  border: 1px solid var(--color-border);
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow: var(--shadow-sm);
+.st-key-vv-chat-main-shell::after {
+
+    content: "";
+
+    position: absolute;
+
+    bottom: -110px;
+
+    left: -100px;
+
+    width: 280px;
+
+    height: 280px;
+
+    border-radius: 50%;
+
+    background:
+
+        radial-gradient(
+            circle,
+            rgba(56, 189, 248, 0.10),
+            transparent 72%
+        );
+
+    pointer-events:
+        none;
+
+    animation:
+        vv-corner-breathe 6s ease-in-out infinite reverse;
+
 }
 
-.vv-chat-message { display: flex; gap: 14px; margin: 24px; max-width: 90%; }
-.vv-chat-message-user { flex-direction: row-reverse; margin-left: auto; }
 
-.vv-chat-avatar {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  font-size: .82rem;
-  color: white;
-  background: linear-gradient(135deg, #2563EB, #3B82F6);
-  flex-shrink: 0;
+@keyframes vv-corner-breathe {
+
+    0%,
+    100% {
+
+        transform:
+            scale(0.94);
+
+        opacity:
+            0.65;
+
+    }
+
+    50% {
+
+        transform:
+            scale(1.08);
+
+        opacity:
+            1;
+
+    }
+
 }
 
-.vv-chat-message-user .vv-chat-avatar { background: #64748B; }
 
-.vv-chat-message-body { flex: 1; }
-.vv-chat-message-label { font-size: .75rem; color: var(--color-text-secondary); font-weight: 700; margin-bottom: 8px; }
-.vv-chat-message-user .vv-chat-message-label { text-align: right; }
+/* ==========================================================================
+   🌌 MOVING ENERGY LINE AROUND CHAT CARD
+   ========================================================================== */
 
-.vv-chat-bubble {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: 14px;
-  padding: 14px 18px;
-  color: var(--color-text-primary);
-  line-height: 1.8;
-  font-size: .9rem;
-  word-break: break-word;
+.st-key-vv-chat-main-shell {
+
+    isolation:
+        isolate;
+
 }
 
-.vv-chat-message-user .vv-chat-bubble {
-  background: linear-gradient(135deg, #2563EB, #3B82F6);
-  color: white;
-  border: none;
+
+.st-key-vv-chat-main-shell > div:first-child::before {
+
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+
+    left: -30%;
+
+    width: 30%;
+
+    height: 1px;
+
+    background:
+
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(56, 189, 248, 0.15),
+            rgba(56, 189, 248, 0.9),
+            rgba(37, 99, 235, 0.8),
+            transparent
+        );
+
+    box-shadow:
+
+        0 0 12px
+        rgba(56, 189, 248, 0.65),
+
+        0 0 25px
+        rgba(37, 99, 235, 0.35);
+
+    animation:
+        vv-card-scan 5s linear infinite;
+
+    pointer-events:
+        none;
+
 }
 
-.vv-chat-tools { margin-top: 10px; color: var(--color-text-secondary); font-size: .8rem; letter-spacing: 6px; }
 
-.vv-chat-empty {
-  min-height: 420px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  color: var(--color-text-secondary);
-  padding: 40px;
+@keyframes vv-card-scan {
+
+    0% {
+
+        left:
+            -35%;
+
+        opacity:
+            0;
+
+    }
+
+    15% {
+
+        opacity:
+            1;
+
+    }
+
+    70% {
+
+        opacity:
+            1;
+
+    }
+
+    100% {
+
+        left:
+            130%;
+
+        opacity:
+            0;
+
+    }
+
 }
 
-.vv-chat-empty strong { display: block; color: white; font-size: 1.2rem; margin-bottom: 10px; }
 
-.vv-chat-input-note { text-align: center; color: var(--color-text-secondary); font-size: .72rem; margin-top: 10px; margin-bottom: 6px; }
+/* ==========================================================================
+   ONLINE BADGE
+   ========================================================================== */
 
-.vv-chat-card .stButton > button {
-  width: 100%;
-  justify-content: flex-start;
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-  color: var(--color-text-secondary) !important;
-  text-align: left;
-  padding: 10px 12px !important;
-  border-radius: 10px !important;
-  transition: .25s;
+.vv-chat-badge {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    padding:
+        6px
+        13px;
+
+    margin-bottom:
+        13px;
+
+    border-radius:
+        999px;
+
+    background:
+        rgba(37, 99, 235, 0.08);
+
+    border:
+        1px solid
+        rgba(37, 99, 235, 0.18);
+
+    color:
+        var(--color-primary, #2563EB);
+
+    font-size:
+        0.67rem;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        0.25px;
+
+    text-transform:
+        uppercase;
+
+    box-shadow:
+
+        0 0 20px
+        rgba(37, 99, 235, 0.08);
+
 }
 
-.vv-chat-card .stButton > button:hover {
-  background: rgba(37,99,235,.10) !important;
-  color: var(--color-primary) !important;
-  transform: translateX(6px);
+
+.vv-online-dot {
+
+    width: 7px;
+
+    height: 7px;
+
+    border-radius:
+        50%;
+
+    background:
+        #22C55E;
+
+    box-shadow:
+
+        0 0 0 3px
+        rgba(34, 197, 94, 0.12),
+
+        0 0 12px
+        rgba(34, 197, 94, 0.45);
+
+    animation:
+        vv-online-pulse 1.8s infinite;
+
 }
 
-.stChatInput { margin-top: 14px; }
-.stChatInput textarea { border-radius: 14px !important; }
 
-.stChatInput button {
-  background: linear-gradient(135deg, #2563EB, #3B82F6) !important;
-  border: none !important;
-  color: white !important;
+@keyframes vv-online-pulse {
+
+    0% {
+
+        transform:
+            scale(1);
+
+        box-shadow:
+            0 0 0 3px rgba(34,197,94,0.12),
+            0 0 8px rgba(34,197,94,0.3);
+
+    }
+
+    50% {
+
+        transform:
+            scale(1.25);
+
+        box-shadow:
+            0 0 0 6px rgba(34,197,94,0.05),
+            0 0 18px rgba(34,197,94,0.65);
+
+    }
+
+    100% {
+
+        transform:
+            scale(1);
+
+        box-shadow:
+            0 0 0 3px rgba(34,197,94,0.12),
+            0 0 8px rgba(34,197,94,0.3);
+
+    }
+
 }
 
-.stChatInput button:hover { opacity: .92; }
+
+/* ==========================================================================
+   HERO
+   ========================================================================== */
+
+.vv-chat-hero-inline {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 24px;
+
+    padding-bottom: 18px;
+
+    margin-bottom: 7px;
+
+    border-bottom:
+        1px solid
+        var(--color-border, #E2E8F0);
+
+}
+
+
+.vv-hero-left {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 14px;
+
+    flex: 1;
+
+    min-width: 0;
+
+}
+
+
+.vv-hero-avatar {
+
+    flex:
+        0 0 68px;
+
+    width: 68px;
+
+    height: 68px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background:
+        rgba(37, 99, 235, 0.09);
+
+    box-shadow:
+
+        0 0 0 6px
+        rgba(37, 99, 235, 0.045),
+
+        0 0 30px
+        rgba(37, 99, 235, 0.12);
+
+    animation:
+        vv-avatar-breathe 4s ease-in-out infinite;
+
+}
+
+
+@keyframes vv-avatar-breathe {
+
+    0%,
+    100% {
+
+        box-shadow:
+
+            0 0 0 6px rgba(37,99,235,0.045),
+            0 0 30px rgba(37,99,235,0.12);
+
+    }
+
+    50% {
+
+        box-shadow:
+
+            0 0 0 8px rgba(37,99,235,0.06),
+            0 0 38px rgba(56,189,248,0.20);
+
+    }
+
+}
+
+
+.vv-hero-avatar img {
+
+    width: 78%;
+
+    height: 78%;
+
+    object-fit:
+        contain;
+
+    display:
+        block;
+
+}
+
+
+.vv-hero-text h2 {
+
+    margin:
+        0
+        0
+        6px;
+
+    color:
+        var(--color-text-primary, #0F172A);
+
+    font-size:
+        1.4rem;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        -0.3px;
+
+}
+
+
+.vv-hero-gradient {
+
+    background:
+
+        linear-gradient(
+            135deg,
+            #2563EB,
+            #38BDF8
+        );
+
+    -webkit-background-clip:
+        text;
+
+    background-clip:
+        text;
+
+    -webkit-text-fill-color:
+        transparent;
+
+    color:
+        transparent;
+
+}
+
+
+.vv-hero-text p {
+
+    margin:
+        0;
+
+    max-width:
+        520px;
+
+    color:
+        var(--color-text-secondary, #64748B);
+
+    font-size:
+        0.78rem;
+
+    line-height:
+        1.65;
+
+}
+
+
+/* ==========================================================================
+   🚗 HERO CAR IMAGE
+   ========================================================================== */
+
+.vv-hero-banner-wrap {
+
+    position: relative;
+
+    flex:
+        0 0 250px;
+
+    width:
+        250px;
+
+    height:
+        130px;
+
+}
+
+
+.vv-hero-ring {
+
+    position: absolute;
+
+    inset:
+        -22px;
+
+    z-index:
+        0;
+
+    border-radius:
+        50%;
+
+    background:
+
+        radial-gradient(
+            circle,
+            rgba(37, 99, 235, 0.20),
+            rgba(56, 189, 248, 0.08),
+            transparent 70%
+        );
+
+    filter:
+        blur(5px);
+
+    animation:
+        vv-ring-breathe 4s ease-in-out infinite;
+
+    pointer-events:
+        none;
+
+}
+
+
+@keyframes vv-ring-breathe {
+
+    0%,
+    100% {
+
+        transform:
+            scale(0.96);
+
+        opacity:
+            0.75;
+
+    }
+
+    50% {
+
+        transform:
+            scale(1.06);
+
+        opacity:
+            1;
+
+    }
+
+}
+
+
+.vv-hero-banner {
+
+    position: relative;
+
+    z-index:
+        1;
+
+    width:
+        100%;
+
+    height:
+        100%;
+
+    overflow:
+        hidden;
+
+    border-radius:
+        16px;
+
+    border:
+        1px solid
+        rgba(37, 99, 235, 0.30);
+
+    background:
+        var(--color-surface, #F1F5F9);
+
+    box-shadow:
+
+        0 22px 45px -18px
+        rgba(37, 99, 235, 0.45),
+
+        0 0 25px
+        rgba(56, 189, 248, 0.08),
+
+        var(--shadow-sm);
+
+    transition:
+
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
+
+}
+
+
+.vv-hero-banner:hover {
+
+    transform:
+        translateY(-3px)
+        scale(1.012);
+
+    box-shadow:
+
+        0 28px 55px -17px
+        rgba(37, 99, 235, 0.58),
+
+        0 0 35px
+        rgba(56, 189, 248, 0.14);
+
+}
+
+
+.vv-hero-banner img {
+
+    position: relative;
+
+    z-index:
+        1;
+
+    width:
+        100%;
+
+    height:
+        100%;
+
+    object-fit:
+        cover;
+
+    display:
+        block;
+
+}
+
+
+/* ==========================================================================
+   ✨ ORIGINAL MOVING SHINE — DO NOT REMOVE
+   ========================================================================== */
+
+.vv-banner-scan {
+
+    position: absolute;
+
+    z-index:
+        5;
+
+    top:
+        -30%;
+
+    left:
+        -65%;
+
+    width:
+        35%;
+
+    height:
+        170%;
+
+    pointer-events:
+        none;
+
+    background:
+
+        linear-gradient(
+            105deg,
+            transparent 0%,
+            rgba(255, 255, 255, 0.02) 30%,
+            rgba(255, 255, 255, 0.70) 48%,
+            rgba(56, 189, 248, 0.32) 53%,
+            rgba(255, 255, 255, 0.02) 70%,
+            transparent 100%
+        );
+
+    filter:
+        blur(2px);
+
+    transform:
+        skewX(-18deg);
+
+    animation:
+        vv-car-shine 3.8s ease-in-out infinite;
+
+}
+
+
+@keyframes vv-car-shine {
+
+    0% {
+
+        left:
+            -65%;
+
+        opacity:
+            0;
+
+    }
+
+    12% {
+
+        opacity:
+            0.15;
+
+    }
+
+    25% {
+
+        opacity:
+            0.95;
+
+    }
+
+    45% {
+
+        opacity:
+            0.65;
+
+    }
+
+    65% {
+
+        left:
+            125%;
+
+        opacity:
+            0.15;
+
+    }
+
+    100% {
+
+        left:
+            125%;
+
+        opacity:
+            0;
+
+    }
+
+}
+
+
+/* ==========================================================================
+   ✨ EXTRA SOFT CAR GLOW
+   ========================================================================== */
+
+.vv-banner-glow {
+
+    position: absolute;
+
+    z-index:
+        4;
+
+    top:
+        0;
+
+    bottom:
+        0;
+
+    left:
+        -20%;
+
+    width:
+        45%;
+
+    pointer-events:
+        none;
+
+    background:
+
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(37, 99, 235, 0.08),
+            rgba(56, 189, 248, 0.12),
+            transparent
+        );
+
+    filter:
+        blur(10px);
+
+    animation:
+        vv-banner-glow 3.8s ease-in-out infinite;
+
+}
+
+
+@keyframes vv-banner-glow {
+
+    0%,
+    15% {
+
+        transform:
+            translateX(-100%);
+
+        opacity:
+            0;
+
+    }
+
+    40% {
+
+        opacity:
+            1;
+
+    }
+
+    70%,
+    100% {
+
+        transform:
+            translateX(330%);
+
+        opacity:
+            0;
+
+    }
+
+}
+
+
+/* ==========================================================================
+   CHAT SCROLL
+   ========================================================================== */
+
+.st-key-vv-chat-scroll {
+
+    margin:
+        0 !important;
+
+    padding:
+        0 !important;
+
+    border:
+        none !important;
+
+    background:
+        transparent !important;
+
+}
+
+
+.st-key-vv-chat-scroll > div {
+
+    padding:
+        4px
+        0 !important;
+
+}
+
+
+/* ==========================================================================
+   MESSAGES
+   ========================================================================== */
+
+.vv-msg {
+
+    display:
+        flex;
+
+    gap:
+        10px;
+
+    width:
+        100%;
+
+    margin:
+        14px
+        0;
+
+    align-items:
+        flex-start;
+
+    box-sizing:
+        border-box;
+
+}
+
+
+.vv-msg-user {
+
+    justify-content:
+        flex-end;
+
+}
+
+
+.vv-msg-avatar {
+
+    width:
+        30px;
+
+    height:
+        30px;
+
+    flex:
+        0 0 30px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    border-radius:
+        50%;
+
+    background:
+        rgba(37, 99, 235, 0.10);
+
+    box-shadow:
+
+        0 0 0 3px
+        rgba(37, 99, 235, 0.05),
+
+        0 0 15px
+        rgba(37, 99, 235, 0.08);
+
+    overflow:
+        hidden;
+
+}
+
+
+.vv-msg-avatar img {
+
+    width:
+        80%;
+
+    height:
+        80%;
+
+    object-fit:
+        contain;
+
+}
+
+
+.vv-msg-body {
+
+    max-width:
+        76%;
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+}
+
+
+.vv-msg-user .vv-msg-body {
+
+    align-items:
+        flex-end;
+
+}
+
+
+.vv-msg-time {
+
+    margin-bottom:
+        4px;
+
+    color:
+        var(--color-text-secondary, #64748B);
+
+    font-size:
+        0.63rem;
+
+    font-weight:
+        600;
+
+}
+
+
+.vv-bubble {
+
+    padding:
+        10px
+        13px;
+
+    border:
+        1px solid
+        #DCE6F5 !important;
+
+    border-left:
+        3px solid
+        #2563EB !important;
+
+    border-radius:
+        4px
+        14px
+        14px
+        4px;
+
+    background:
+        #EAF1FC !important;
+
+    color:
+        #16213E !important;
+
+    font-size:
+        0.78rem;
+
+    line-height:
+        1.75;
+
+    word-break:
+        break-word;
+
+    box-shadow:
+
+        0 7px 20px -15px
+        rgba(37, 99, 235, 0.35);
+
+}
+
+
+.vv-msg-user .vv-bubble {
+
+    border:
+        none !important;
+
+    background:
+
+        linear-gradient(
+            135deg,
+            #2563EB,
+            #3B82F6
+        ) !important;
+
+    color:
+        #FFFFFF !important;
+
+    box-shadow:
+
+        0 10px 25px -14px
+        rgba(37, 99, 235, 0.65);
+
+}
+
+
+.vv-msg-tools {
+
+    display:
+        flex;
+
+    gap:
+        12px;
+
+    margin-top:
+        5px;
+
+    color:
+        var(--color-text-secondary, #64748B);
+
+    font-size:
+        0.72rem;
+
+}
+
+
+.vv-msg-tools span {
+
+    cursor:
+        pointer;
+
+    transition:
+
+        color 0.2s ease,
+        transform 0.2s ease;
+
+}
+
+
+.vv-msg-tools span:hover {
+
+    color:
+        var(--color-primary, #2563EB);
+
+    transform:
+        translateY(-1px);
+
+}
+
+
+/* ==========================================================================
+   CHAT INPUT
+   ========================================================================== */
+
+.st-key-vv-chat-main-shell .stChatInput {
+
+    margin:
+        10px
+        0
+        0;
+
+}
+
+
+.st-key-vv-chat-main-shell .stChatInput > div {
+
+    border-radius:
+        14px !important;
+
+    border-color:
+        var(--color-border, #E2E8F0) !important;
+
+    background:
+        var(--color-bg, #FFFFFF) !important;
+
+    transition:
+
+        box-shadow 0.25s ease,
+        border-color 0.25s ease;
+
+}
+
+
+.st-key-vv-chat-main-shell .stChatInput > div:focus-within {
+
+    border-color:
+        rgba(37, 99, 235, 0.50) !important;
+
+    box-shadow:
+
+        0 0 0 3px
+        rgba(37, 99, 235, 0.10),
+
+        0 0 25px
+        rgba(37, 99, 235, 0.08) !important;
+
+}
+
+
+.st-key-vv-chat-main-shell .stChatInput textarea {
+
+    color:
+        var(--color-text-primary, #0F172A) !important;
+
+    font-size:
+        0.82rem !important;
+
+}
+
+
+.st-key-vv-chat-main-shell .stChatInput button {
+
+    background:
+
+        linear-gradient(
+            135deg,
+            #2563EB,
+            #3B82F6
+        ) !important;
+
+    border:
+        none !important;
+
+    color:
+        #FFFFFF !important;
+
+    box-shadow:
+
+        0 5px 16px
+        rgba(37, 99, 235, 0.28);
+
+}
+
+
+.st-key-vv-chat-main-shell .stChatInput button:hover {
+
+    filter:
+        brightness(1.08);
+
+    box-shadow:
+
+        0 7px 20px
+        rgba(37, 99, 235, 0.38);
+
+}
+
+
+.vv-chat-input-note {
+
+    text-align:
+        center;
+
+    color:
+        var(--color-text-secondary, #64748B);
+
+    font-size:
+        0.62rem;
+
+    margin:
+        6px
+        0
+        2px;
+
+}
+
+
+/* ==========================================================================
+   NEW CHAT
+   ========================================================================== */
+
+.st-key-vv-chat-main-shell .stButton > button {
+
+    border-radius:
+        9px !important;
+
+    font-size:
+        0.72rem !important;
+
+}
+
+
+.st-key-vv-chat-main-shell > div:last-child
+.stButton > button {
+
+    padding:
+        3px
+        0 !important;
+
+    background:
+        transparent !important;
+
+    border:
+        1px solid
+        var(--color-border, #E2E8F0) !important;
+
+    color:
+        var(--color-text-secondary, #64748B) !important;
+
+    transition:
+        all 0.25s ease;
+
+}
+
+
+.st-key-vv-chat-main-shell > div:last-child
+.stButton > button:hover {
+
+    color:
+        #60A5FA !important;
+
+    border-color:
+        rgba(56, 189, 248, 0.45) !important;
+
+    box-shadow:
+        0 0 18px rgba(56,189,248,0.15);
+
+    transform:
+        translateY(-1px);
+
+}
+
+
+/* ==========================================================================
+   FUTURISTIC SIDE DOCK
+   ========================================================================== */
+
+.st-key-vv-side-rail {
+
+    position:
+        relative;
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    align-items:
+        center;
+
+    gap:
+        9px;
+
+    padding:
+        10px
+        5px;
+
+    margin-top:
+        24px;
+
+    border-radius:
+        18px;
+
+    border:
+        1px solid
+        rgba(37, 99, 235, 0.18);
+
+    background:
+
+        linear-gradient(
+            180deg,
+            rgba(37, 99, 235, 0.055),
+            rgba(56, 189, 248, 0.025)
+        );
+
+    box-shadow:
+
+        0 12px 35px -25px
+        rgba(37, 99, 235, 0.55),
+
+        0 0 22px
+        rgba(56, 189, 248, 0.035);
+
+    backdrop-filter:
+        blur(12px);
+
+    animation:
+        vv-rail-float 5s ease-in-out infinite;
+
+}
+
+
+@keyframes vv-rail-float {
+
+    0%,
+    100% {
+
+        transform:
+            translateY(0);
+
+    }
+
+    50% {
+
+        transform:
+            translateY(-2px);
+
+    }
+
+}
+
+
+/* ==========================================================================
+   RAIL LIGHT
+   ========================================================================== */
+
+.st-key-vv-side-rail::before {
+
+    content: "";
+
+    position:
+        absolute;
+
+    left:
+        50%;
+
+    top:
+        14px;
+
+    bottom:
+        14px;
+
+    width:
+        1px;
+
+    background:
+
+        linear-gradient(
+            transparent,
+            rgba(37, 99, 235, 0.30),
+            rgba(56, 189, 248, 0.50),
+            rgba(37, 99, 235, 0.30),
+            transparent
+        );
+
+    transform:
+        translateX(-50%);
+
+    pointer-events:
+        none;
+
+    animation:
+        vv-rail-line 3s ease-in-out infinite;
+
+}
+
+
+@keyframes vv-rail-line {
+
+    0%,
+    100% {
+
+        opacity:
+            0.45;
+
+    }
+
+    50% {
+
+        opacity:
+            1;
+
+        box-shadow:
+            0 0 10px rgba(56,189,248,0.65);
+
+    }
+
+}
+
+
+/* ==========================================================================
+   SIDE ICON BUTTONS
+   ========================================================================== */
+
+.st-key-vv_side_suggest,
+.st-key-vv_side_history,
+.st-key-vv_side_upload {
+
+    position:
+        relative;
+
+    z-index:
+        2;
+
+}
+
+
+.st-key-vv_side_suggest .stButton > button,
+.st-key-vv_side_history .stButton > button,
+.st-key-vv_side_upload .stButton > button {
+
+    width:
+        42px !important;
+
+    min-width:
+        42px !important;
+
+    height:
+        42px !important;
+
+    min-height:
+        42px !important;
+
+    padding:
+        0 !important;
+
+    margin:
+        0 auto !important;
+
+    display:
+        flex !important;
+
+    align-items:
+        center !important;
+
+    justify-content:
+        center !important;
+
+    border-radius:
+        14px !important;
+
+    border:
+        1px solid
+        rgba(37, 99, 235, 0.20) !important;
+
+    background:
+        #FFFFFF !important;
+
+    color:
+        #123B63 !important;
+
+    font-size:
+        1.05rem !important;
+
+    box-shadow:
+
+        0 8px 20px -14px
+        rgba(37, 99, 235, 0.60),
+
+        inset 0 0 15px
+        rgba(37, 99, 235, 0.035);
+
+    transition:
+
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        border-color 0.25s ease,
+        background 0.25s ease,
+        color 0.25s ease;
+
+}
+
+
+/* ==========================================================================
+   LIGHT — HOVER / ACTIVE
+   ========================================================================== */
+
+.st-key-vv_side_suggest .stButton > button:hover,
+.st-key-vv_side_history .stButton > button:hover,
+.st-key-vv_side_upload .stButton > button:hover {
+
+    transform:
+        translateY(-3px)
+        scale(1.04);
+
+    border-color:
+        rgba(96, 165, 250, 0.65) !important;
+
+    background:
+        #DDF3FF !important;
+
+    color:
+        #2563EB !important;
+
+    box-shadow:
+
+        0 12px 28px -13px
+        rgba(37, 99, 235, 0.70),
+
+        0 0 22px
+        rgba(56, 189, 248, 0.22);
+
+}
+
+
+/* ==========================================================================
+   LIGHT — CLICK / FOCUS
+   ========================================================================== */
+
+.st-key-vv_side_suggest .stButton > button:focus,
+.st-key-vv_side_history .stButton > button:focus,
+.st-key-vv_side_upload .stButton > button:focus {
+
+    background:
+        #D8F1FF !important;
+
+    color:
+        #2563EB !important;
+
+    border-color:
+        rgba(56, 189, 248, 0.70) !important;
+
+    box-shadow:
+
+        0 0 0 3px
+        rgba(56, 189, 248, 0.10),
+
+        0 0 25px
+        rgba(56, 189, 248, 0.25);
+
+}
+
+
+/* ==========================================================================
+   SUGGESTED BREATHING
+   ========================================================================== */
+
+.st-key-vv_side_suggest .stButton > button {
+
+    animation:
+        vv-suggest-breathe 3s ease-in-out infinite;
+
+}
+
+
+@keyframes vv-suggest-breathe {
+
+    0%,
+    100% {
+
+        box-shadow:
+
+            0 8px 20px -14px
+            rgba(37, 99, 235, 0.55);
+
+    }
+
+    50% {
+
+        box-shadow:
+
+            0 10px 25px -12px
+            rgba(37, 99, 235, 0.75),
+
+            0 0 18px
+            rgba(56, 189, 248, 0.12);
+
+    }
+
+}
+
+
+/* ==========================================================================
+   🚗 COSMIC VEHICLE UPLOAD BUTTON
+   ========================================================================== */
+
+.st-key-vv_side_upload .stButton > button {
+
+    border-color:
+        rgba(37, 99, 235, 0.28) !important;
+
+}
+
+
+.st-key-vv_side_upload .stButton > button:hover {
+
+    box-shadow:
+
+        0 0 0 4px
+        rgba(56, 189, 248, 0.045),
+
+        0 0 30px
+        rgba(56, 189, 248, 0.25) !important;
+
+}
+
+
+/* ==========================================================================
+   SIDE PANEL
+   ========================================================================== */
+
+.st-key-vv-side-panel {
+
+    position:
+        relative;
+
+    margin-top:
+        24px;
+
+    padding:
+        15px;
+
+    border-radius:
+        18px;
+
+    border:
+        1px solid
+        rgba(37, 99, 235, 0.20);
+
+    background:
+        var(--color-bg, #FFFFFF);
+
+    box-shadow:
+
+        0 20px 45px -25px
+        rgba(37, 99, 235, 0.35),
+
+        0 0 30px
+        rgba(56, 189, 248, 0.055);
+
+    overflow:
+        hidden;
+
+    animation:
+        vv-panel-in 0.32s cubic-bezier(.2,.8,.2,1);
+
+}
+
+
+@keyframes vv-panel-in {
+
+    from {
+
+        opacity:
+            0;
+
+        transform:
+            translateX(16px)
+            scale(0.96);
+
+        filter:
+            blur(3px);
+
+    }
+
+    to {
+
+        opacity:
+            1;
+
+        transform:
+            translateX(0)
+            scale(1);
+
+        filter:
+            blur(0);
+
+    }
+
+}
+
+
+.st-key-vv-side-panel::before {
+
+    content: "";
+
+    position:
+        absolute;
+
+    top:
+        0;
+
+    left:
+        -40%;
+
+    width:
+        35%;
+
+    height:
+        2px;
+
+    background:
+
+        linear-gradient(
+            90deg,
+            transparent,
+            #38BDF8,
+            #2563EB,
+            transparent
+        );
+
+    box-shadow:
+
+        0 0 15px
+        rgba(56, 189, 248, 0.45);
+
+    animation:
+        vv-panel-shimmer 3.5s linear infinite;
+
+}
+
+
+@keyframes vv-panel-shimmer {
+
+    from {
+
+        left:
+            -40%;
+
+    }
+
+    to {
+
+        left:
+            120%;
+
+    }
+
+}
+
+
+/* ==========================================================================
+   PANEL HEADER
+   ========================================================================== */
+
+.vv-panel-heading {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        8px;
+
+    margin-bottom:
+        12px;
+
+}
+
+
+.vv-panel-title {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        8px;
+
+    color:
+        var(--color-text-primary, #0F172A);
+
+    font-size:
+        0.82rem;
+
+    font-weight:
+        800;
+
+}
+
+
+.vv-panel-title-icon {
+
+    width:
+        27px;
+
+    height:
+        27px;
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    border-radius:
+        9px;
+
+    color:
+        #2563EB;
+
+    background:
+        rgba(37, 99, 235, 0.09);
+
+    box-shadow:
+
+        0 0 15px
+        rgba(37, 99, 235, 0.08);
+
+    animation:
+        vv-icon-glow 2.5s ease-in-out infinite;
+
+}
+
+
+@keyframes vv-icon-glow {
+
+    0%,
+    100% {
+
+        box-shadow:
+            0 0 12px rgba(37,99,235,0.08);
+
+    }
+
+    50% {
+
+        box-shadow:
+            0 0 22px rgba(56,189,248,0.20);
+
+    }
+
+}
+
+
+.vv-panel-status {
+
+    padding:
+        3px
+        7px;
+
+    border-radius:
+        999px;
+
+    background:
+        rgba(37, 99, 235, 0.08);
+
+    color:
+        #2563EB;
+
+    font-size:
+        0.50rem;
+
+    font-weight:
+        900;
+
+    letter-spacing:
+        0.5px;
+
+}
+
+
+.vv-side-description {
+
+    margin:
+        0
+        0
+        10px;
+
+    color:
+        var(--color-text-secondary, #64748B);
+
+    font-size:
+        0.65rem;
+
+    line-height:
+        1.55;
+
+}
+
+
+/* ==========================================================================
+   SUGGESTED CHIPS
+   ========================================================================== */
+
+.st-key-vv-side-panel .stButton {
+
+    margin:
+        0 !important;
+
+}
+
+
+.st-key-vv-side-panel .stButton > button {
+
+    min-height:
+        38px !important;
+
+    padding:
+        6px
+        8px !important;
+
+    margin:
+        4px
+        0 !important;
+
+    border:
+        1px solid
+        var(--color-border, #E2E8F0) !important;
+
+    border-radius:
+        12px !important;
+
+    background:
+        var(--color-bg, #FFFFFF) !important;
+
+    color:
+        var(--color-text-secondary, #64748B) !important;
+
+    font-size:
+        0.63rem !important;
+
+    transition:
+
+        transform 0.22s ease,
+        border-color 0.22s ease,
+        box-shadow 0.22s ease,
+        color 0.22s ease,
+        background 0.22s ease;
+
+}
+
+
+.st-key-vv-side-panel .stButton > button:hover {
+
+    transform:
+        translateY(-2px);
+
+    color:
+        #2563EB !important;
+
+    border-color:
+        rgba(37, 99, 235, 0.35) !important;
+
+    box-shadow:
+
+        0 8px 20px -15px
+        rgba(37, 99, 235, 0.65);
+
+    background:
+        rgba(37, 99, 235, 0.045) !important;
+
+}
+
+
+/* ==========================================================================
+   HISTORY
+   ========================================================================== */
+
+.vv-history-count {
+
+    display:
+        flex;
+
+    justify-content:
+        space-between;
+
+    align-items:
+        center;
+
+    padding:
+        8px
+        10px;
+
+    margin-bottom:
+        9px;
+
+    border-radius:
+        11px;
+
+    background:
+        rgba(37, 99, 235, 0.055);
+
+    color:
+        var(--color-text-secondary, #64748B);
+
+    font-size:
+        0.62rem;
+
+}
+
+
+.vv-history-count strong {
+
+    color:
+        #2563EB;
+
+    font-size:
+        0.70rem;
+
+}
+
+
+.vv-history-item {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        8px;
+
+    padding:
+        8px;
+
+    margin:
+        5px
+        0;
+
+    border-radius:
+        11px;
+
+    border:
+        1px solid
+        rgba(37, 99, 235, 0.08);
+
+    background:
+        rgba(37, 99, 235, 0.025);
+
+    transition:
+
+        transform 0.2s ease,
+        background 0.2s ease,
+        border-color 0.2s ease;
+
+}
+
+
+.vv-history-item:hover {
+
+    transform:
+        translateX(-2px);
+
+    border-color:
+        rgba(37, 99, 235, 0.22);
+
+    background:
+        rgba(37, 99, 235, 0.06);
+
+}
+
+
+.vv-history-icon {
+
+    width:
+        24px;
+
+    height:
+        24px;
+
+    flex:
+        0 0 24px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    border-radius:
+        8px;
+
+    color:
+        #2563EB;
+
+    background:
+        rgba(37, 99, 235, 0.09);
+
+    font-size:
+        0.65rem;
+
+}
+
+
+.vv-history-text {
+
+    overflow:
+        hidden;
+
+    color:
+        var(--color-text-secondary, #64748B);
+
+    font-size:
+        0.61rem;
+
+    line-height:
+        1.4;
+
+    white-space:
+        nowrap;
+
+    text-overflow:
+        ellipsis;
+
+}
+
+
+.vv-empty-history {
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    align-items:
+        center;
+
+    text-align:
+        center;
+
+    padding:
+        20px
+        5px;
+
+}
+
+
+.vv-empty-history-icon {
+
+    width:
+        45px;
+
+    height:
+        45px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    margin-bottom:
+        9px;
+
+    border-radius:
+        50%;
+
+    color:
+        #2563EB;
+
+    background:
+        rgba(37, 99, 235, 0.08);
+
+    font-size:
+        1.2rem;
+
+    box-shadow:
+
+        0 0 25px
+        rgba(37, 99, 235, 0.08);
+
+}
+
+
+/* ==========================================================================
+   🚗 COSMIC VEHICLE UPLOAD
+   ========================================================================== */
+
+.vv-cosmic-upload {
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    align-items:
+        center;
+
+    text-align:
+        center;
+
+    padding:
+        9px
+        2px
+        14px;
+
+}
+
+
+/* ==========================================================================
+   VEHICLE ORBIT
+   ========================================================================== */
+
+.vv-upload-orbit {
+
+    position:
+        relative;
+
+    width:
+        82px;
+
+    height:
+        82px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    margin-bottom:
+        10px;
+
+}
+
+
+/* OUTER ORBIT */
+
+.vv-upload-orbit::before,
+.vv-upload-orbit::after {
+
+    content:
+        "";
+
+    position:
+        absolute;
+
+    inset:
+        5px;
+
+    border-radius:
+        50%;
+
+    border:
+        1px solid
+        rgba(37, 99, 235, 0.24);
+
+    transform:
+        rotate(25deg)
+        scaleX(1.35);
+
+    animation:
+        vv-orbit-spin 5s linear infinite;
+
+}
+
+
+.vv-upload-orbit::after {
+
+    inset:
+        11px;
+
+    border-color:
+        rgba(56, 189, 248, 0.30);
+
+    transform:
+        rotate(-35deg)
+        scaleX(1.25);
+
+    animation-direction:
+        reverse;
+
+    animation-duration:
+        4s;
+
+}
+
+
+@keyframes vv-orbit-spin {
+
+    from {
+
+        transform:
+            rotate(0deg)
+            scaleX(1.35);
+
+    }
+
+    to {
+
+        transform:
+            rotate(360deg)
+            scaleX(1.35);
+
+    }
+
+}
+
+
+/* ==========================================================================
+   ORBIT PARTICLES
+   ========================================================================== */
+
+.vv-upload-orbit span {
+
+    position:
+        absolute;
+
+    width:
+        5px;
+
+    height:
+        5px;
+
+    border-radius:
+        50%;
+
+    background:
+        #38BDF8;
+
+    box-shadow:
+
+        0 0 10px
+        rgba(56, 189, 248, 0.80);
+
+    animation:
+        vv-particle-pulse 2s ease-in-out infinite;
+
+}
+
+
+.vv-upload-orbit span:nth-child(1) {
+
+    top:
+        3px;
+
+    left:
+        38px;
+
+}
+
+
+.vv-upload-orbit span:nth-child(2) {
+
+    right:
+        3px;
+
+    bottom:
+        18px;
+
+    background:
+        #2563EB;
+
+    animation-delay:
+        0.45s;
+
+}
+
+
+.vv-upload-orbit span:nth-child(3) {
+
+    left:
+        7px;
+
+    bottom:
+        13px;
+
+    animation-delay:
+        0.9s;
+
+}
+
+
+@keyframes vv-particle-pulse {
+
+    0%,
+    100% {
+
+        transform:
+            scale(0.8);
+
+        opacity:
+            0.65;
+
+    }
+
+    50% {
+
+        transform:
+            scale(1.35);
+
+        opacity:
+            1;
+
+        box-shadow:
+            0 0 16px rgba(56,189,248,0.95);
+
+    }
+
+}
+
+
+/* ==========================================================================
+   🚗 VEHICLE CORE
+   ========================================================================== */
+
+.vv-upload-core {
+
+    position:
+        relative;
+
+    z-index:
+        3;
+
+    width:
+        48px;
+
+    height:
+        48px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    border-radius:
+        50%;
+
+    border:
+        1px solid
+        rgba(56, 189, 248, 0.40);
+
+    background:
+
+        linear-gradient(
+            145deg,
+            rgba(37, 99, 235, 0.14),
+            rgba(56, 189, 248, 0.10)
+        );
+
+    box-shadow:
+
+        0 0 25px
+        rgba(37, 99, 235, 0.18),
+
+        inset 0 0 20px
+        rgba(56, 189, 248, 0.08);
+
+    animation:
+        vv-ufo-float 2.5s ease-in-out infinite;
+
+}
+
+
+.vv-upload-core::before {
+
+    content:
+        "";
+
+    position:
+        absolute;
+
+    inset:
+        -7px;
+
+    border-radius:
+        50%;
+
+    border:
+        1px solid
+        rgba(56, 189, 248, 0.12);
+
+    animation:
+        vv-core-ring 2.8s ease-in-out infinite;
+
+}
+
+
+@keyframes vv-core-ring {
+
+    0%,
+    100% {
+
+        transform:
+            scale(0.92);
+
+        opacity:
+            0.35;
+
+    }
+
+    50% {
+
+        transform:
+            scale(1.12);
+
+        opacity:
+            0.85;
+
+    }
+
+}
+
+
+@keyframes vv-ufo-float {
+
+    0%,
+    100% {
+
+        transform:
+            translateY(0);
+
+    }
+
+    50% {
+
+        transform:
+            translateY(-4px);
+
+    }
+
+}
+
+
+.vv-cosmic-upload strong {
+
+    color:
+        var(--color-text-primary, #0F172A);
+
+    font-size:
+        0.72rem;
+
+}
+
+
+.vv-cosmic-upload > span {
+
+    max-width:
+        180px;
+
+    margin-top:
+        5px;
+
+    color:
+        var(--color-text-secondary, #64748B);
+
+    font-size:
+        0.59rem;
+
+    line-height:
+        1.5;
+
+}
+
+
+/* ==========================================================================
+   FILE UPLOADER
+   ========================================================================== */
+
+.st-key-vv_vehicle_upload {
+
+    margin-top:
+        2px;
+
+}
+
+
+.st-key-vv_vehicle_upload section {
+
+    border:
+        1px dashed
+        rgba(37, 99, 235, 0.30) !important;
+
+    border-radius:
+        12px !important;
+
+    background:
+        rgba(37, 99, 235, 0.025) !important;
+
+    transition:
+
+        border-color 0.25s ease,
+        background 0.25s ease,
+        box-shadow 0.25s ease;
+
+}
+
+
+.st-key-vv_vehicle_upload section:hover {
+
+    border-color:
+        rgba(37, 99, 235, 0.55) !important;
+
+    background:
+        rgba(37, 99, 235, 0.05) !important;
+
+    box-shadow:
+        0 0 18px rgba(56,189,248,0.08);
+
+}
+
+
+.vv-upload-ready {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    gap:
+        6px;
+
+    margin-top:
+        7px;
+
+    color:
+        #2563EB;
+
+    font-size:
+        0.59rem;
+
+    font-weight:
+        700;
+
+}
+
+
+.vv-upload-ready-dot {
+
+    width:
+        6px;
+
+    height:
+        6px;
+
+    border-radius:
+        50%;
+
+    background:
+        #22C55E;
+
+    box-shadow:
+        0 0 10px
+        rgba(34, 197, 94, 0.55);
+
+}
+
+
+/* ==========================================================================
+   CLOSE BUTTON
+   ========================================================================== */
+
+.st-key-vv_close_panel .stButton > button {
+
+    min-height:
+        28px !important;
+
+    padding:
+        2px !important;
+
+    margin-top:
+        8px !important;
+
+    border-radius:
+        9px !important;
+
+    border:
+        1px solid
+        rgba(37, 99, 235, 0.12) !important;
+
+    background:
+        transparent !important;
+
+    color:
+        var(--color-text-secondary, #64748B) !important;
+
+    font-size:
+        0.85rem !important;
+
+}
+
+
+.st-key-vv_close_panel .stButton > button:hover {
+
+    color:
+        #2563EB !important;
+
+    border-color:
+        rgba(37, 99, 235, 0.30) !important;
+
+    background:
+        rgba(37, 99, 235, 0.045) !important;
+
+}
+
+
+/* ==========================================================================
+   🌑 DARK MODE
+   ========================================================================== */
+
+[data-theme="dark"]
+.st-key-vv-chat-main-shell {
+
+    background:
+        #0D1626;
+
+    border-color:
+        #1D2B45;
+
+    box-shadow:
+
+        0 20px 55px -25px
+        rgba(0,0,0,0.75),
+
+        0 0 28px
+        rgba(37,99,235,0.055);
+
+}
+
+
+[data-theme="dark"]
+.st-key-vv-side-rail {
+
+    background:
+
+        linear-gradient(
+            180deg,
+            rgba(37, 99, 235, 0.10),
+            rgba(14, 165, 233, 0.04)
+        );
+
+    border-color:
+        rgba(59, 130, 246, 0.20);
+
+}
+
+
+/* ==========================================================================
+   🌑 DARK — ORIGINAL NAVY / TEAL BUTTONS
+   ========================================================================== */
+
+[data-theme="dark"]
+.st-key-vv_side_suggest .stButton > button,
+
+[data-theme="dark"]
+.st-key-vv_side_history .stButton > button,
+
+[data-theme="dark"]
+.st-key-vv_side_upload .stButton > button {
+
+    background:
+        #102A43 !important;
+
+    border-color:
+        #21486A !important;
+
+    color:
+        #E7F6FF !important;
+
+    box-shadow:
+
+        0 8px 22px -14px
+        rgba(0,0,0,0.85),
+
+        inset 0 0 16px
+        rgba(56,189,248,0.035);
+
+}
+
+
+/* ==========================================================================
+ /* ==========================================================================
+   🌑 DARK — NAVY ICON BUTTONS
+   ========================================================================== */
+
+[data-theme="dark"]
+.st-key-vv_side_suggest .stButton > button:hover,
+
+[data-theme="dark"]
+.st-key-vv_side_history .stButton > button:hover,
+
+[data-theme="dark"]
+.st-key-vv_side_upload .stButton > button:hover {
+
+    background:
+        #173B5F !important;
+
+    border-color:
+        #38BDF8 !important;
+
+    color:
+        #E7F6FF !important;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(56, 189, 248, 0.08),
+
+        0 0 22px
+        rgba(56, 189, 248, 0.28);
+
+    transform:
+        translateY(-2px)
+        scale(1.03);
+}
+
+
+/* ==========================================================================
+   🌑 DARK — CLICK / FOCUS
+   ========================================================================== */
+
+[data-theme="dark"]
+.st-key-vv_side_suggest .stButton > button:focus,
+
+[data-theme="dark"]
+.st-key-vv_side_history .stButton > button:focus,
+
+[data-theme="dark"]
+.st-key-vv_side_upload .stButton > button:focus,
+
+[data-theme="dark"]
+.st-key-vv_side_suggest .stButton > button:active,
+
+[data-theme="dark"]
+.st-key-vv_side_history .stButton > button:active,
+
+[data-theme="dark"]
+.st-key-vv_side_upload .stButton > button:active {
+
+    background:
+        #1E4A70 !important;
+
+    border-color:
+        #60D5FF !important;
+
+    color:
+        #FFFFFF !important;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(56, 189, 248, 0.12),
+
+        0 0 30px
+        rgba(56, 189, 248, 0.38),
+
+        inset 0 0 12px
+        rgba(56, 189, 248, 0.10);
+
+    transform:
+        scale(0.98);
+}
+
+
+/* ==========================================================================
+   DARK — FOCUS / CLICK
+   ========================================================================== */
+
+[data-theme="dark"]
+.st-key-vv_side_suggest .stButton > button:focus,
+
+[data-theme="dark"]
+.st-key-vv_side_history .stButton > button:focus,
+
+[data-theme="dark"]
+.st-key-vv_side_upload .stButton > button:focus {
+
+    background:
+        #BFEAFF !important;
+
+    border-color:
+        #7DD3FC !important;
+
+    color:
+        #123B63 !important;
+
+    box-shadow:
+
+        0 0 0 3px
+        rgba(125,211,252,0.10),
+
+        0 0 30px
+        rgba(56,189,248,0.35);
+
+}
+
+
+/* ==========================================================================
+   DARK SIDE PANEL
+   ========================================================================== */
+
+[data-theme="dark"]
+.st-key-vv-side-panel {
+
+    background:
+        #0D1626;
+
+    border-color:
+        #1D2B45;
+
+    box-shadow:
+
+        0 25px 55px -28px
+        rgba(0,0,0,0.85),
+
+        0 0 25px
+        rgba(37,99,235,0.06);
+
+}
+
+
+[data-theme="dark"]
+.st-key-vv-side-panel .stButton > button {
+
+    background:
+        #0A1424 !important;
+
+    border-color:
+        #223252 !important;
+
+    color:
+        #AFC4E5 !important;
+
+}
+
+
+[data-theme="dark"]
+.st-key-vv-side-panel .stButton > button:hover {
+
+    background:
+        rgba(37, 99, 235, 0.12) !important;
+
+    border-color:
+        rgba(59, 130, 246, 0.40) !important;
+
+    color:
+        #60A5FA !important;
+
+}
+
+
+/* ==========================================================================
+   DARK CHAT BUBBLE
+   ========================================================================== */
+
+[data-theme="dark"]
+.vv-bubble {
+
+    background:
+        #17233A !important;
+
+    color:
+        #D6E4FF !important;
+
+    border-color:
+        #223252 !important;
+
+    border-left-color:
+        #3B82F6 !important;
+
+}
+
+
+[data-theme="dark"]
+.vv-hero-banner {
+
+    background:
+        #0A1424;
+
+}
+
+
+[data-theme="dark"]
+.vv-history-item {
+
+    background:
+        rgba(37, 99, 235, 0.045);
+
+    border-color:
+        rgba(59, 130, 246, 0.10);
+
+}
+
+
+/* ==========================================================================
+   DARK UPLOAD CORE
+   ========================================================================== */
+
+[data-theme="dark"]
+.vv-upload-core {
+
+    background:
+
+        linear-gradient(
+            145deg,
+            rgba(37,99,235,0.22),
+            rgba(56,189,248,0.15)
+        );
+
+    border-color:
+        rgba(125,211,252,0.42);
+
+    box-shadow:
+
+        0 0 28px
+        rgba(37,99,235,0.22),
+
+        inset 0 0 20px
+        rgba(56,189,248,0.10);
+
+}
+
+
+/* ==========================================================================
+   RTL
+   ========================================================================== */
+
+.vv-chat-page-rtl .vv-msg-user {
+
+    justify-content:
+        flex-start;
+
+}
+
+
+.vv-chat-page-rtl .vv-msg-user .vv-msg-body {
+
+    align-items:
+        flex-start;
+
+}
+
+
+.vv-chat-page-rtl .vv-history-item:hover {
+
+    transform:
+        translateX(2px);
+
+}
+
+
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
+
+@media (max-width: 1100px) {
+
+    .vv-hero-banner-wrap {
+
+        flex-basis:
+            190px;
+
+        width:
+            190px;
+
+        height:
+            115px;
+
+    }
+
+}
+
 
 @media (max-width: 900px) {
-  .vv-chat-message { max-width: 100%; margin: 16px; }
-  .vv-chat-header { padding: 16px; }
-  .vv-chat-bot-icon { width: 42px; height: 42px; font-size: 20px; }
-  .vv-chat-card { padding: 16px; }
+
+    .vv-chat-hero-inline {
+
+        flex-direction:
+            column;
+
+        align-items:
+            flex-start;
+
+    }
+
+
+    .vv-hero-banner-wrap {
+
+        width:
+            100%;
+
+        flex-basis:
+            auto;
+
+        height:
+            140px;
+
+    }
+
+
+    .vv-msg-body {
+
+        max-width:
+            85%;
+
+    }
+
 }
 
+
+@media (max-width: 700px) {
+
+    .st-key-vv-chat-main-shell {
+
+        padding:
+            16px
+            14px
+            12px !important;
+
+    }
+
+
+    .vv-hero-text h2 {
+
+        font-size:
+            1.05rem;
+
+    }
+
+
+    .vv-hero-text p {
+
+        font-size:
+            0.72rem;
+
+    }
+
+
+    .vv-msg-body {
+
+        max-width:
+            82%;
+
+    }
+
+
+    .vv-bubble {
+
+        font-size:
+            0.72rem;
+
+    }
+
+
+    .st-key-vv-side-rail {
+
+        padding:
+            7px
+            3px;
+
+    }
+
+
+    .st-key-vv_side_suggest .stButton > button,
+
+    .st-key-vv_side_history .stButton > button,
+
+    .st-key-vv_side_upload .stButton > button {
+
+        width:
+            38px !important;
+
+        min-width:
+            38px !important;
+
+        height:
+            38px !important;
+
+        min-height:
+            38px !important;
+
+    }
+
+}
+/* =========================================================
+   FINAL BUTTON FIX
+   ONLY BUTTON COLORS + EFFECTS
+   NO SIZE / POSITION / LAYOUT CHANGES
+   ========================================================= */
+
+/* SIDE RAIL BUTTONS */
+.st-key-vv_side_suggest .stButton > button,
+.st-key-vv_side_history .stButton > button,
+.st-key-vv_side_upload .stButton > button {
+
+    background: #102A43 !important;
+    color: #E7F6FF !important;
+    border-color: #21486A !important;
+}
+
+
+/* SIDE RAIL — HOVER */
+.st-key-vv_side_suggest .stButton > button:hover,
+.st-key-vv_side_history .stButton > button:hover,
+.st-key-vv_side_upload .stButton > button:hover {
+
+    background: #173B5F !important;
+    color: #FFFFFF !important;
+    border-color: #38BDF8 !important;
+
+    box-shadow:
+        0 0 0 3px rgba(56, 189, 248, 0.08),
+        0 0 24px rgba(56, 189, 248, 0.30) !important;
+}
+
+
+/* SIDE RAIL — CLICK */
+.st-key-vv_side_suggest .stButton > button:active,
+.st-key-vv_side_history .stButton > button:active,
+.st-key-vv_side_upload .stButton > button:active,
+.st-key-vv_side_suggest .stButton > button:focus,
+.st-key-vv_side_history .stButton > button:focus,
+.st-key-vv_side_upload .stButton > button:focus {
+
+    background: #1E4A70 !important;
+    color: #FFFFFF !important;
+    border-color: #60D5FF !important;
+
+    box-shadow:
+        0 0 0 3px rgba(56, 189, 248, 0.12),
+        0 0 30px rgba(56, 189, 248, 0.38) !important;
+}
+
+
+/* =========================================================
+   NEW CHAT
+   ========================================================= */
+
+.st-key-vv-chat-main-shell > div:last-child
+.stButton > button {
+
+    background: #102A43 !important;
+    color: #E7F6FF !important;
+    border-color: #21486A !important;
+}
+
+
+.st-key-vv-chat-main-shell > div:last-child
+.stButton > button:hover {
+
+    background: #173B5F !important;
+    color: #FFFFFF !important;
+    border-color: #38BDF8 !important;
+
+    box-shadow:
+        0 0 0 3px rgba(56, 189, 248, 0.08),
+        0 0 24px rgba(56, 189, 248, 0.30) !important;
+}
+
+
+/* =========================================================
+   SIDE PANEL / SUGGESTED BUTTONS
+   ========================================================= */
+
+.st-key-vv-side-panel .stButton > button {
+
+    background: #102A43 !important;
+    color: #E7F6FF !important;
+    border-color: #21486A !important;
+}
+
+
+.st-key-vv-side-panel .stButton > button:hover {
+
+    background: #173B5F !important;
+    color: #FFFFFF !important;
+    border-color: #38BDF8 !important;
+
+    box-shadow:
+        0 0 0 3px rgba(56, 189, 248, 0.08),
+        0 0 24px rgba(56, 189, 248, 0.30) !important;
+}
+
+
+/* =========================================================
+   UPLOAD BUTTON
+   ========================================================= */
+
+.st-key-vv_side_upload .stButton > button {
+
+    background: #102A43 !important;
+    color: #E7F6FF !important;
+    border-color: #21486A !important;
+}
+
+
+/* =========================================================
+   KEEP SEND BUTTON BLUE
+   ========================================================= */
+
+.st-key-vv-chat-main-shell .stChatInput button {
+
+    background:
+        linear-gradient(
+            135deg,
+            #2563EB,
+            #3B82F6
+        ) !important;
+
+    color: #FFFFFF !important;
+    border: none !important;
+}
+/* ============================================================
+   FINAL DARK BUTTON OVERRIDE
+   ONLY COLORS + GLOW
+   DO NOT CHANGE SIZE / POSITION / LAYOUT
+   ============================================================ */
+
+/* ---------- ALL STREAMLIT SECONDARY BUTTONS IN DARK MODE ---------- */
+
+[data-theme="dark"] button[data-testid="stBaseButton-secondary"],
+[data-theme="dark"] button[kind="secondary"] {
+
+    background-color: #102A43 !important;
+    background-image: none !important;
+
+    color: #E7F6FF !important;
+
+    border-color: #21486A !important;
+
+    box-shadow:
+        0 6px 18px rgba(0, 0, 0, 0.35),
+        inset 0 0 14px rgba(56, 189, 248, 0.04) !important;
+}
+
+
+/* ---------- HOVER ---------- */
+
+[data-theme="dark"] button[data-testid="stBaseButton-secondary"]:hover,
+[data-theme="dark"] button[kind="secondary"]:hover {
+
+    background-color: #173B5F !important;
+    background-image: none !important;
+
+    color: #FFFFFF !important;
+
+    border-color: #38BDF8 !important;
+
+    box-shadow:
+        0 0 0 3px rgba(56, 189, 248, 0.08),
+        0 0 24px rgba(56, 189, 248, 0.30) !important;
+}
+
+
+/* ---------- CLICK / FOCUS ---------- */
+
+[data-theme="dark"] button[data-testid="stBaseButton-secondary"]:focus,
+[data-theme="dark"] button[data-testid="stBaseButton-secondary"]:focus-visible,
+[data-theme="dark"] button[kind="secondary"]:focus,
+[data-theme="dark"] button[kind="secondary"]:focus-visible {
+
+    background-color: #1B456A !important;
+    background-image: none !important;
+
+    color: #FFFFFF !important;
+
+    border-color: #60D5FF !important;
+
+    box-shadow:
+        0 0 0 3px rgba(56, 189, 248, 0.14),
+        0 0 30px rgba(56, 189, 248, 0.40) !important;
+}
+
+
+/* ---------- ACTIVE ---------- */
+
+[data-theme="dark"] button[data-testid="stBaseButton-secondary"]:active,
+[data-theme="dark"] button[kind="secondary"]:active {
+
+    background-color: #1E4F78 !important;
+    background-image: none !important;
+
+    color: #FFFFFF !important;
+
+    border-color: #7DD3FC !important;
+
+    box-shadow:
+        0 0 0 3px rgba(56, 189, 248, 0.16),
+        0 0 32px rgba(56, 189, 248, 0.45) !important;
+}
+
+
+/* ============================================================
+   SIDE ICON BUTTONS
+   ============================================================ */
+
+[data-theme="dark"]
+.st-key-vv_side_suggest button,
+[data-theme="dark"]
+.st-key-vv_side_history button,
+[data-theme="dark"]
+.st-key-vv_side_upload button {
+
+    background-color: #102A43 !important;
+    background-image: none !important;
+
+    color: #E7F6FF !important;
+
+    border-color: #21486A !important;
+}
+
+
+[data-theme="dark"]
+.st-key-vv_side_suggest button:hover,
+[data-theme="dark"]
+.st-key-vv_side_history button:hover,
+[data-theme="dark"]
+.st-key-vv_side_upload button:hover {
+
+    background-color: #173B5F !important;
+    background-image: none !important;
+
+    color: #FFFFFF !important;
+
+    border-color: #38BDF8 !important;
+
+    box-shadow:
+        0 0 0 3px rgba(56, 189, 248, 0.08),
+        0 0 26px rgba(56, 189, 248, 0.32) !important;
+}
+
+
+[data-theme="dark"]
+.st-key-vv_side_suggest button:focus,
+[data-theme="dark"]
+.st-key-vv_side_history button:focus,
+[data-theme="dark"]
+.st-key-vv_side_upload button:focus,
+[data-theme="dark"]
+.st-key-vv_side_suggest button:active,
+[data-theme="dark"]
+.st-key-vv_side_history button:active,
+[data-theme="dark"]
+.st-key-vv_side_upload button:active {
+
+    background-color: #1B456A !important;
+    background-image: none !important;
+
+    color: #FFFFFF !important;
+
+    border-color: #60D5FF !important;
+
+    box-shadow:
+        0 0 0 3px rgba(56, 189, 248, 0.12),
+        0 0 30px rgba(56, 189, 248, 0.38) !important;
+}
+
+
+/* ============================================================
+   SIDE PANEL BUTTONS
+   ============================================================ */
+
+[data-theme="dark"]
+.st-key-vv-side-panel .stButton > button {
+
+    background-color: #102A43 !important;
+    background-image: none !important;
+
+    color: #E7F6FF !important;
+
+    border-color: #21486A !important;
+}
+
+
+[data-theme="dark"]
+.st-key-vv-side-panel .stButton > button:hover {
+
+    background-color: #173B5F !important;
+    background-image: none !important;
+
+    color: #FFFFFF !important;
+
+    border-color: #38BDF8 !important;
+
+    box-shadow:
+        0 0 0 3px rgba(56, 189, 248, 0.08),
+        0 0 24px rgba(56, 189, 248, 0.30) !important;
+}
+
+
+/* ============================================================
+   NEW CHAT BUTTON
+   ============================================================ */
+
+[data-theme="dark"]
+.st-key-vv-chat-main-shell .stButton > button {
+
+    background-color: #102A43 !important;
+    background-image: none !important;
+
+    color: #E7F6FF !important;
+
+    border-color: #21486A !important;
+}
+
+
+[data-theme="dark"]
+.st-key-vv-chat-main-shell .stButton > button:hover {
+
+    background-color: #173B5F !important;
+    background-image: none !important;
+
+    color: #FFFFFF !important;
+
+    border-color: #38BDF8 !important;
+
+    box-shadow:
+        0 0 0 3px rgba(56, 189, 248, 0.08),
+        0 0 26px rgba(56, 189, 248, 0.32) !important;
+}
+
+
+/* ============================================================
+   CLOSE BUTTON
+   ============================================================ */
+
+[data-theme="dark"]
+.st-key-vv_close_panel .stButton > button {
+
+    background-color: #102A43 !important;
+    background-image: none !important;
+
+    color: #AFC4E5 !important;
+
+    border-color: #21486A !important;
+}
+
+
+[data-theme="dark"]
+.st-key-vv_close_panel .stButton > button:hover {
+
+    background-color: #173B5F !important;
+    color: #FFFFFF !important;
+
+    border-color: #38BDF8 !important;
+
+    box-shadow:
+        0 0 20px rgba(56, 189, 248, 0.25) !important;
+}
+
+
+/* ============================================================
+   KEEP CHAT SEND BUTTON AS IT IS
+   ============================================================ */
+
+[data-theme="dark"]
+.st-key-vv-chat-main-shell .stChatInput button {
+
+    background:
+        linear-gradient(
+            135deg,
+            #2563EB,
+            #3B82F6
+        ) !important;
+
+    color: #FFFFFF !important;
+
+    border: none !important;
+}

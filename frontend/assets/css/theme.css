@@ -2577,3 +2577,467 @@ html[dir="rtl"]
   border-bottom: 2px solid var(--color-primary) !important;
   text-shadow: none !important;
 }
+/* ============================================================
+   ✦ FINAL PREMIUM POLISH
+   Visual-only patch — DO NOT CHANGE STRUCTURE
+   Keeps current layout / RTL / themes / sizing intact.
+   ============================================================ */
+
+
+/* ============================================================
+   1) PREMIUM FEATURE CARDS
+   ============================================================ */
+
+.vv-feature-card {
+    position: relative !important;
+    isolation: isolate !important;
+    transition:
+        transform .25s cubic-bezier(.2,.8,.2,1),
+        box-shadow .25s ease,
+        border-color .25s ease !important;
+}
+
+/* soft ambient light */
+.vv-feature-card::before {
+    content: "" !important;
+    position: absolute !important;
+    inset: -35% !important;
+    z-index: -1 !important;
+    pointer-events: none !important;
+    background: radial-gradient(
+        circle at 50% 20%,
+        rgba(37,99,235,.10),
+        transparent 55%
+    ) !important;
+    opacity: 0 !important;
+    transition: opacity .25s ease !important;
+}
+
+/* subtle top highlight */
+.vv-feature-card::after {
+    content: "" !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 14px !important;
+    right: 14px !important;
+    height: 1px !important;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(80,150,255,.30),
+        transparent
+    ) !important;
+    opacity: .35 !important;
+    pointer-events: none !important;
+}
+
+.vv-feature-card:hover {
+    transform: translateY(-5px) !important;
+    border-color: rgba(61,131,255,.52) !important;
+    box-shadow:
+        0 14px 35px rgba(40,105,210,.13),
+        0 0 28px rgba(55,130,255,.07) !important;
+}
+
+.vv-feature-card:hover::before {
+    opacity: 1 !important;
+}
+
+
+/* ============================================================
+   2) FEATURE ICON — PREMIUM GLOW
+   ============================================================ */
+
+.vv-feature-icon {
+    position: relative !important;
+    transition:
+        transform .25s ease,
+        box-shadow .25s ease,
+        background .25s ease !important;
+}
+
+.vv-feature-icon::after {
+    content: "" !important;
+    position: absolute !important;
+    inset: -5px !important;
+    border-radius: 50% !important;
+    border: 1px solid rgba(55,126,240,.12) !important;
+    opacity: 0 !important;
+    transform: scale(.85) !important;
+    transition: all .25s ease !important;
+    pointer-events: none !important;
+}
+
+.vv-feature-card:hover .vv-feature-icon {
+    transform: translateY(-2px) scale(1.04) !important;
+    box-shadow:
+        0 0 22px rgba(55,126,240,.18),
+        inset 0 0 14px rgba(55,126,240,.05) !important;
+}
+
+.vv-feature-card:hover .vv-feature-icon::after {
+    opacity: 1 !important;
+    transform: scale(1) !important;
+}
+
+
+/* ============================================================
+   3) STAT CARDS — CLEAN PREMIUM DEPTH
+   ============================================================ */
+
+.vv-stat-card {
+    position: relative !important;
+    overflow: hidden !important;
+    transition:
+        transform .24s cubic-bezier(.2,.8,.2,1),
+        box-shadow .24s ease,
+        border-color .24s ease !important;
+}
+
+.vv-stat-card::before {
+    content: "" !important;
+    position: absolute !important;
+    width: 130px !important;
+    height: 130px !important;
+    right: -55px !important;
+    top: -65px !important;
+    border-radius: 50% !important;
+    background: radial-gradient(
+        circle,
+        rgba(37,99,235,.11),
+        transparent 70%
+    ) !important;
+    pointer-events: none !important;
+}
+
+.vv-stat-card:hover {
+    transform: translateY(-4px) !important;
+    border-color: rgba(61,131,255,.45) !important;
+    box-shadow:
+        0 14px 34px rgba(45,105,190,.12),
+        0 0 24px rgba(50,125,255,.06) !important;
+}
+
+
+/* ============================================================
+   4) STAT ICON
+   ============================================================ */
+
+.vv-stat-icon {
+    transition:
+        transform .24s ease,
+        box-shadow .24s ease !important;
+}
+
+.vv-stat-card:hover .vv-stat-icon {
+    transform: scale(1.06) !important;
+    box-shadow:
+        0 0 20px rgba(55,126,240,.14) !important;
+}
+
+
+/* ============================================================
+   5) ASSISTANT CARD — PREMIUM AI LOOK
+   ============================================================ */
+
+.vv-assistant-row-marker
++ div[data-testid="stHorizontalBlock"] {
+    border-radius: 15px !important;
+    border: 1px solid rgba(61,131,255,.38) !important;
+    box-shadow:
+        0 10px 32px rgba(35,105,220,.12),
+        0 0 28px rgba(45,125,255,.06) !important;
+    transition:
+        box-shadow .25s ease,
+        border-color .25s ease,
+        transform .25s ease !important;
+}
+
+/* ambient AI glow */
+.vv-assistant-row-marker
++ div[data-testid="stHorizontalBlock"]::before {
+    content: "" !important;
+    position: absolute !important;
+    width: 230px !important;
+    height: 230px !important;
+    right: -70px !important;
+    top: -45px !important;
+    border-radius: 50% !important;
+    background: radial-gradient(
+        circle,
+        rgba(37,125,255,.18),
+        transparent 68%
+    ) !important;
+    filter: blur(10px) !important;
+    pointer-events: none !important;
+    z-index: 0 !important;
+}
+
+.vv-assistant-row-marker
++ div[data-testid="stHorizontalBlock"]:hover {
+    border-color: rgba(72,145,255,.58) !important;
+    box-shadow:
+        0 14px 38px rgba(35,105,220,.16),
+        0 0 34px rgba(45,125,255,.10) !important;
+}
+
+
+/* ============================================================
+   6) ASSISTANT ROBOT — SOFT AI HALO
+   ============================================================ */
+
+.vv-assistant-row-marker
++ div[data-testid="stHorizontalBlock"]
+[data-testid="stImage"] {
+    position: relative !important;
+    z-index: 3 !important;
+}
+
+.vv-assistant-row-marker
++ div[data-testid="stHorizontalBlock"]
+[data-testid="stImage"] img {
+    filter:
+        drop-shadow(0 0 18px rgba(35,121,255,.28))
+        drop-shadow(0 0 38px rgba(35,121,255,.10))
+        drop-shadow(0 12px 25px rgba(0,45,130,.12)) !important;
+    transition:
+        transform .35s cubic-bezier(.2,.8,.2,1),
+        filter .35s ease !important;
+}
+
+.vv-assistant-row-marker
++ div[data-testid="stHorizontalBlock"]:hover
+[data-testid="stImage"] img {
+    transform: translateY(-3px) scale(1.025) !important;
+    filter:
+        drop-shadow(0 0 22px rgba(35,121,255,.38))
+        drop-shadow(0 0 45px rgba(35,121,255,.14))
+        drop-shadow(0 14px 28px rgba(0,45,130,.14)) !important;
+}
+
+
+/* ============================================================
+   7) ASSISTANT CTA — PREMIUM BUTTON
+   ============================================================ */
+
+.vv-assistant-row-marker
++ div[data-testid="stHorizontalBlock"]
+.stButton > button {
+    position: relative !important;
+    overflow: hidden !important;
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease,
+        filter .2s ease !important;
+}
+
+.vv-assistant-row-marker
++ div[data-testid="stHorizontalBlock"]
+.stButton > button::before {
+    content: "" !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: -100% !important;
+    width: 70% !important;
+    height: 100% !important;
+    background: linear-gradient(
+        100deg,
+        transparent,
+        rgba(255,255,255,.18),
+        transparent
+    ) !important;
+    transition: left .45s ease !important;
+    pointer-events: none !important;
+}
+
+.vv-assistant-row-marker
++ div[data-testid="stHorizontalBlock"]
+.stButton > button:hover {
+    transform: translateY(-2px) !important;
+    filter: brightness(1.06) !important;
+    box-shadow:
+        0 8px 20px rgba(37,99,235,.30),
+        0 0 22px rgba(37,99,235,.14) !important;
+}
+
+.vv-assistant-row-marker
++ div[data-testid="stHorizontalBlock"]
+.stButton > button:hover::before {
+    left: 140% !important;
+}
+
+
+/* ============================================================
+   8) HERO VEHICLE — MORE PREMIUM WITHOUT MOVING IT
+   ============================================================ */
+
+.vv-car-art {
+    filter:
+        drop-shadow(0 24px 45px rgba(30,100,220,.20))
+        drop-shadow(0 0 18px rgba(40,125,255,.08)) !important;
+    transition: filter .3s ease !important;
+}
+
+
+/* stronger but controlled hero glow */
+.vv-car-stage::before {
+    opacity: .95 !important;
+}
+
+[data-theme="dark"] .vv-car-stage::before {
+    opacity: 1 !important;
+}
+
+
+/* ============================================================
+   9) HERO BUTTONS — CLEAN PREMIUM HOVER
+   ============================================================ */
+
+.vv-home-hero-marker
++ div[data-testid="stHorizontalBlock"]
+.stButton > button {
+    position: relative !important;
+    overflow: hidden !important;
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease,
+        filter .2s ease !important;
+}
+
+.vv-home-hero-marker
++ div[data-testid="stHorizontalBlock"]
+.stButton > button:hover {
+    filter: brightness(1.06) !important;
+    box-shadow:
+        0 8px 22px rgba(37,99,235,.18),
+        0 0 20px rgba(37,99,235,.08) !important;
+}
+
+
+/* ============================================================
+   10) DARK MODE — DEEPER PREMIUM SURFACES
+   ============================================================ */
+
+[data-theme="dark"] .vv-feature-card,
+[data-theme="dark"] .vv-stat-card {
+    background:
+        linear-gradient(
+            145deg,
+            rgba(7,20,36,.98),
+            rgba(5,15,28,.98)
+        ) !important;
+}
+
+[data-theme="dark"] .vv-feature-card:hover,
+[data-theme="dark"] .vv-stat-card:hover {
+    background:
+        linear-gradient(
+            145deg,
+            rgba(8,24,43,.99),
+            rgba(5,17,31,.99)
+        ) !important;
+}
+
+
+/* ============================================================
+   11) LIGHT MODE — CLEAN WHITE / BLUE GLASS
+   ============================================================ */
+
+[data-theme="light"] .vv-feature-card,
+[data-theme="light"] .vv-stat-card {
+    background:
+        linear-gradient(
+            145deg,
+            #ffffff,
+            #f8fbff
+        ) !important;
+}
+
+[data-theme="light"] .vv-feature-card:hover,
+[data-theme="light"] .vv-stat-card:hover {
+    background:
+        linear-gradient(
+            145deg,
+            #ffffff,
+            #f5f9ff
+        ) !important;
+}
+
+
+/* ============================================================
+   12) RTL SAFETY — VISUAL ONLY
+   No column reversal / no layout changes.
+   ============================================================ */
+
+html[dir="rtl"] .vv-feature-card,
+html[dir="rtl"] .vv-stat-card {
+    text-align: right !important;
+}
+
+html[dir="rtl"]
+.vv-assistant-row-marker
++ div[data-testid="stHorizontalBlock"]::before {
+    right: auto !important;
+    left: -70px !important;
+}
+
+html[dir="rtl"]
+.vv-assistant-row-marker
++ div[data-testid="stHorizontalBlock"]:hover
+[data-testid="stImage"] img {
+    transform: translateY(-3px) scale(1.025) !important;
+}
+
+
+/* ============================================================
+   13) REDUCE MOTION FOR USERS WHO PREFER IT
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .vv-feature-card,
+    .vv-stat-card,
+    .vv-feature-icon,
+    .vv-stat-icon,
+    .vv-assistant-row-marker
+    + div[data-testid="stHorizontalBlock"],
+    .vv-assistant-row-marker
+    + div[data-testid="stHorizontalBlock"]
+    [data-testid="stImage"] img,
+    .vv-home-hero-marker
+    + div[data-testid="stHorizontalBlock"]
+    .stButton > button {
+        transition: none !important;
+    }
+
+    .vv-feature-card:hover,
+    .vv-stat-card:hover,
+    .vv-assistant-row-marker
+    + div[data-testid="stHorizontalBlock"]:hover {
+        transform: none !important;
+    }
+}
+
+
+/* ============================================================
+   14) MOBILE SAFETY
+   ============================================================ */
+
+@media (max-width: 900px) {
+
+    .vv-feature-card:hover,
+    .vv-stat-card:hover {
+        transform: none !important;
+    }
+
+    .vv-assistant-row-marker
+    + div[data-testid="stHorizontalBlock"]:hover {
+        transform: none !important;
+    }
+
+    .vv-assistant-row-marker
+    + div[data-testid="stHorizontalBlock"]
+    [data-testid="stImage"] img {
+        transform: none !important;
+    }
+}

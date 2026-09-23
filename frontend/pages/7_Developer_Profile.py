@@ -1,4 +1,4 @@
-import textwrap
+import base64
 from pathlib import Path
 
 import streamlit as st
@@ -42,9 +42,54 @@ if dev is None:
 
     st.stop()
 
-# =====================================================
+
+# ============================================================================
+# HELPERS
+# ============================================================================
+
+language = st.session_state.get("lang", "en")
+
+name = (
+    dev["name_ar"]
+    if language == "ar" and dev.get("name_ar")
+    else dev["name"]
+)
+
+
+def get_photo_data_uri(photo_path: Path) -> str:
+    """Base64-encode a local photo so it can render as a plain <img> tag.
+
+    This lets the photo sit inside a fixed-size CSS box with
+    object-fit: cover, instead of st.image() which sizes itself off the
+    photo's own resolution/aspect ratio - that mismatch was the reason
+    every developer's photo showed up a different size.
+    """
+
+    if not photo_path.exists():
+        return ""
+
+    suffix = photo_path.suffix.lower()
+
+    mime_types = {
+        ".png": "image/png",
+        ".jpg": "image/jpeg",
+        ".jpeg": "image/jpeg",
+        ".webp": "image/webp",
+        ".gif": "image/gif",
+    }
+
+    mime = mime_types.get(suffix, "image/png")
+
+    encoded = base64.b64encode(
+        photo_path.read_bytes()
+    ).decode("utf-8")
+
+    return f"data:{mime};base64,{encoded}"
+
+
+# ============================================================================
 # HEADER
-# =====================================================
+# ============================================================================
 
 back, title = st.columns([1, 5])
 
@@ -60,28 +105,28 @@ with back:
 
 with title:
 
-    st.markdown(
-        textwrap.dedent(f"""\
+    st.html(
+        f"""
         <div>
             <div class="hero-badge">
                 👨‍💻 Developer
             </div>
             <div class="hero-title">
-                {dev["name"]}
+                {name}
             </div>
             <div class="hero-description">
                 {dev["role"]}
             </div>
         </div>
-        """),
-        unsafe_allow_html=True,
+        """
     )
 
 st.write("")
 
-# =====================================================
+
+# ============================================================================
 # CONTENT
-# =====================================================
+# ============================================================================
 
 left, right = st.columns(
     [1, 2],
@@ -90,35 +135,62 @@ left, right = st.columns(
 
 with left:
 
-    # ── Photo or avatar ───────────────────────────────
-    # Photos are in frontend/pages/img/ (same folder as this file)
+    # Photos live in frontend/pages/img/ (same folder as this file)
     _PAGES_DIR = Path(__file__).resolve().parent
     photo_file = _PAGES_DIR / "img" / Path(dev.get("photo", "")).name
 
-    if dev.get("photo") and photo_file.exists():
-        st.image(str(photo_file), use_container_width=True)
-    else:
-        st.markdown(
-            textwrap.dedent(f"""\
+    has_photo = bool(dev.get("photo")) and photo_file.exists()
+
+    if has_photo:
+
+        photo_uri = get_photo_data_uri(photo_file)
+
+        st.html(
+            f"""
             <div class="vv-card profile-card">
-                <div class="developer-avatar profile-avatar">
-                    {dev["name"][0]}
+
+                <div class="profile-visual">
+                    <img src="{photo_uri}" alt="{name}" />
                 </div>
+
                 <h2>
-                    {dev["name"]}
+                    {name}
                 </h2>
+
                 <div class="developer-role">
                     {dev["role"]}
                 </div>
+
             </div>
-            """),
-            unsafe_allow_html=True,
+            """
+        )
+
+    else:
+
+        st.html(
+            f"""
+            <div class="vv-card profile-card">
+
+                <div class="profile-visual profile-visual-letter">
+                    <span>{name[0]}</span>
+                </div>
+
+                <h2>
+                    {name}
+                </h2>
+
+                <div class="developer-role">
+                    {dev["role"]}
+                </div>
+
+            </div>
+            """
         )
 
 with right:
 
-    st.markdown(
-        textwrap.dedent(f"""\
+    st.html(
+        f"""
         <div class="vv-card">
             <h3>
                 About
@@ -127,14 +199,13 @@ with right:
                 {dev["bio"]}
             </p>
         </div>
-        """),
-        unsafe_allow_html=True,
+        """
     )
 
     st.write("")
 
-    st.markdown(
-        textwrap.dedent(f"""\
+    st.html(
+        f"""
         <div class="vv-card">
             <h3>
                 {t("profile_contact")}
@@ -149,8 +220,7 @@ with right:
                 💼 <a href="{dev["linkedin"]}" target="_blank">{dev["linkedin"]}</a>
             </p>
         </div>
-        """),
-        unsafe_allow_html=True,
+        """
     )
 
     st.write("")
@@ -165,7 +235,6 @@ with right:
 
         with cols[i % 4]:
 
-            st.markdown(
-                f'<span class="vv-badge vv-badge-primary">{skill}</span>',
-                unsafe_allow_html=True,
+            st.html(
+                f'<span class="vv-badge vv-badge-primary">{skill}</span>'
             )

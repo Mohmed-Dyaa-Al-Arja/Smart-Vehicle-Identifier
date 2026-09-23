@@ -1,10 +1,1446 @@
-/* ==========================================================================
-   History
-   ========================================================================== */
+/* =========================================================
+   VEHICLE VISION AI — HISTORY PAGE
+   Rebuilt to match the reference design (light + dark).
+   Sections:
+     1. Variables      7. Filters        13. AI card
+     2. Base           8. Timeline       14. Buttons
+     3. Sidebar        9. History cards  15. Animations
+     4. Hero          10. Pagination     16. Dark mode
+     5. Content shell 11. Stats          17. RTL
+     6. Search        12. Recent activity 18. Responsive
+   ========================================================= */
 
-.history-card { margin-bottom: 16px; }
-.history-title { font-size: 1.05rem; color: white; font-weight: 700; margin-bottom: 8px; }
-.history-subtitle { color: var(--color-text-secondary); font-size: .85rem; margin-bottom: 8px; }
-.history-id { color: #3B82F6; font-size: .78rem; }
-.history-date { color: var(--color-text-secondary); font-size: .9rem; margin-top: 6px; }
 
+/* =========================================================
+   1. VARIABLES
+   ========================================================= */
+
+:root {
+    --h-blue:        #2f6bff;
+    --h-blue-deep:   #1d4ed8;
+    --h-cyan:        #36d6ff;
+    --h-ink:         #10243f;
+    --h-muted:       #6c809a;
+    --h-panel:       #ffffff;
+    --h-panel-2:     #f7fafe;
+    --h-line:        rgba(41, 106, 180, 0.14);
+    --h-shell:       #ffffff;
+    --h-page:        #f2f6fc;
+    --h-shadow:      0 10px 30px rgba(24, 74, 124, 0.07);
+    --h-shadow-lift: 0 20px 44px rgba(20, 70, 120, 0.13);
+    --h-ok-bg:       rgba(22, 163, 74, 0.10);
+    --h-ok-line:     rgba(22, 163, 74, 0.26);
+    --h-ok-text:     #15803d;
+    --h-radius:      16px;
+    --h-ease:        cubic-bezier(.22,.85,.26,1);
+}
+
+[data-theme="dark"] {
+    --h-ink:         #eaf4ff;
+    --h-muted:       #8ea7c2;
+    --h-panel:       #0b1a2e;
+    --h-panel-2:     #0a1626;
+    --h-line:        rgba(76, 160, 224, 0.17);
+    --h-shell:       #081324;
+    --h-page:        #050d1a;
+    --h-shadow:      0 12px 34px rgba(0, 0, 0, 0.30);
+    --h-shadow-lift: 0 22px 50px rgba(0, 0, 0, 0.42);
+    --h-ok-bg:       rgba(34, 197, 94, 0.13);
+    --h-ok-line:     rgba(34, 197, 94, 0.30);
+    --h-ok-text:     #4ade80;
+}
+
+
+/* =========================================================
+   2. BASE / PAGE SHELL
+   ========================================================= */
+
+.vv-history-root { display: none; }
+
+/* Give the whole history workspace the light-grey page field
+   seen in the reference, with the content sitting on a card. */
+.vv-hist-scope + div[data-testid="stHorizontalBlock"] {
+    align-items: stretch !important;
+    gap: 0 !important;
+    margin-top: 6px;
+    border-radius: 22px;
+    background: var(--h-shell);
+    border: 1px solid var(--h-line);
+    box-shadow: var(--h-shadow);
+    overflow: hidden;
+    animation: hShellIn .6s var(--h-ease) both;
+}
+
+/* Sidebar column keeps its own tint + divider. */
+.vv-hist-scope + div[data-testid="stHorizontalBlock"]
+> div[data-testid="column"]:first-child {
+    position: relative;
+    padding: 18px 14px 20px !important;
+    background: linear-gradient(180deg,
+        rgba(240, 246, 254, 0.75),
+        rgba(233, 241, 252, 0.45));
+    border-right: 1px solid var(--h-line);
+    min-height: 700px;
+}
+
+[data-theme="dark"] .vv-hist-scope + div[data-testid="stHorizontalBlock"]
+> div[data-testid="column"]:first-child {
+    background: linear-gradient(180deg,
+        rgba(9, 22, 40, 0.95),
+        rgba(6, 15, 28, 0.95));
+}
+
+/* Ambient light streak behind the sidebar (dark mode hero-lighting). */
+.vv-hist-scope + div[data-testid="stHorizontalBlock"]
+> div[data-testid="column"]:first-child::after {
+    content: "";
+    position: absolute;
+    left: -30%;
+    top: 30%;
+    width: 160%;
+    height: 40%;
+    pointer-events: none;
+    background: radial-gradient(ellipse at center,
+        rgba(47, 140, 255, 0.20), transparent 68%);
+    filter: blur(22px);
+    opacity: 0;
+    transition: opacity .4s ease;
+    animation: hAmbientDrift 7s ease-in-out infinite;
+}
+
+[data-theme="dark"] .vv-hist-scope + div[data-testid="stHorizontalBlock"]
+> div[data-testid="column"]:first-child::after { opacity: 1; }
+
+/* Scattered twinkling particles down the sidebar, echoing the reference's
+   diagonal light streak with little glowing dots along it. */
+.vv-hist-scope + div[data-testid="stHorizontalBlock"]
+> div[data-testid="column"]:first-child::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity .4s ease;
+    background-image:
+        radial-gradient(2px 2px at 12% 18%, rgba(120,200,255,.9), transparent 60%),
+        radial-gradient(2px 2px at 28% 62%, rgba(120,200,255,.7), transparent 60%),
+        radial-gradient(1.5px 1.5px at 45% 34%, rgba(150,215,255,.8), transparent 60%),
+        radial-gradient(2px 2px at 20% 84%, rgba(120,200,255,.6), transparent 60%),
+        radial-gradient(1.5px 1.5px at 60% 12%, rgba(150,215,255,.65), transparent 60%),
+        radial-gradient(2px 2px at 75% 70%, rgba(120,200,255,.55), transparent 60%);
+    animation: hParticleTwinkle 4.5s ease-in-out infinite;
+}
+
+[data-theme="dark"] .vv-hist-scope + div[data-testid="stHorizontalBlock"]
+> div[data-testid="column"]:first-child::before { opacity: 1; }
+
+.vv-hist-scope + div[data-testid="stHorizontalBlock"]
+> div[data-testid="column"]:last-child {
+    padding: 0 !important;
+    min-width: 0;
+}
+
+
+/* =========================================================
+   3. SIDEBAR NAVIGATION
+   ========================================================= */
+
+/* Collapse / expand toggle for the left rail */
+div[class*="st-key-vvh-sidebar-toggle"] { display: flex; justify-content: flex-end; margin-bottom: 8px; }
+[dir="rtl"] div[class*="st-key-vvh-sidebar-toggle"] { justify-content: flex-start; }
+
+div[class*="st-key-vvh-sidebar-toggle"] button {
+    width: 30px !important;
+    height: 30px !important;
+    min-height: 30px !important;
+    padding: 0 !important;
+    border-radius: 9px !important;
+    background: var(--h-panel-2) !important;
+    border: 1px solid var(--h-line) !important;
+    color: var(--h-blue) !important;
+    font-weight: 800 !important;
+    font-size: .95rem !important;
+    line-height: 1 !important;
+    box-shadow: none !important;
+    transition: background .2s ease, transform .2s ease !important;
+    animation: hTogglePulse 3s ease-in-out infinite;
+}
+
+div[class*="st-key-vvh-sidebar-toggle"] button:hover {
+    background: rgba(47, 107, 255, 0.12) !important;
+    transform: scale(1.08);
+}
+
+[data-theme="dark"] div[class*="st-key-vvh-sidebar-toggle"] button {
+    background: #0d1f38 !important;
+    border-color: rgba(120, 170, 255, 0.22) !important;
+}
+
+div[class*="st-key-vvh-nav-"] { position: relative; z-index: 2; }
+
+/* A soft glow that breathes behind every nav icon, staggered per item —
+   this is the "icons feel alive" cue that was missing. */
+div[class*="st-key-vvh-nav-"] button::before {
+    content: "";
+    position: absolute;
+    left: 24px;
+    top: 50%;
+    width: 30px;
+    height: 30px;
+    transform: translateY(-50%);
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(90, 160, 255, 0.48), transparent 70%);
+    animation: hIconPulseCentered 2.2s ease-in-out infinite;
+    pointer-events: none;
+    z-index: -1;
+}
+
+[dir="rtl"] div[class*="st-key-vvh-nav-"] button::before { left: auto; right: 24px; }
+
+div[class*="st-key-vvh-nav-"]:nth-of-type(2) button::before { animation-delay: .35s; }
+div[class*="st-key-vvh-nav-"]:nth-of-type(3) button::before { animation-delay: .7s; }
+
+div[class*="st-key-vvh-nav-"][class*="-on"] button::before { display: none; }
+
+.vvh-collapsed-mark ~ div[class*="st-key-vvh-nav-"] button {
+    justify-content: center !important;
+    padding: 10px !important;
+}
+
+div[class*="st-key-vvh-nav-"] button {
+    display: flex !important;
+    justify-content: flex-start !important;
+    align-items: center !important;
+    gap: 10px !important;
+    width: 100% !important;
+    min-height: 44px !important;
+    margin-bottom: 6px !important;
+    padding: 10px 14px !important;
+    border-radius: 12px !important;
+    background: transparent !important;
+    border: 1px solid transparent !important;
+    color: var(--h-muted) !important;
+    font-size: .86rem !important;
+    font-weight: 650 !important;
+    text-align: left !important;
+    box-shadow: none !important;
+    transition: background .22s ease, color .22s ease,
+                transform .22s var(--h-ease), box-shadow .22s ease !important;
+}
+
+div[class*="st-key-vvh-nav-"] button:hover {
+    background: rgba(47, 107, 255, 0.07) !important;
+    color: var(--h-blue) !important;
+    transform: translateX(3px);
+}
+
+/* Active item — solid blue pill with glow, exactly as in the reference. */
+div[class*="st-key-vvh-nav-"][class*="-on"] button {
+    background: linear-gradient(135deg, #3b7cff, #2558e6) !important;
+    border-color: transparent !important;
+    color: #ffffff !important;
+    box-shadow: 0 10px 24px rgba(47, 107, 255, 0.32),
+                0 0 0 1px rgba(90, 150, 255, 0.20) !important;
+    animation: hNavGlow 3.4s ease-in-out infinite;
+}
+
+[data-theme="dark"] div[class*="st-key-vvh-nav-"][class*="-on"] button {
+    background: linear-gradient(135deg, #1f5ad4, #123a8f) !important;
+    box-shadow: 0 10px 26px rgba(30, 90, 220, 0.42),
+                0 0 22px rgba(60, 150, 255, 0.20) !important;
+}
+
+/* Bottom promo card: "Smarter Vision for Safer Roads" */
+.hist-side-promo {
+    position: relative;
+    z-index: 2;
+    margin-top: 26px;
+    padding: 22px 16px 20px;
+    border-radius: 18px;
+    text-align: center;
+    overflow: hidden;
+    background: linear-gradient(170deg,
+        rgba(59, 124, 255, 0.11),
+        rgba(54, 214, 255, 0.05));
+    border: 1px solid rgba(59, 124, 255, 0.18);
+    animation: hFadeUp .7s var(--h-ease) .25s both,
+               hCardGlow 4s ease-in-out infinite .4s;
+}
+
+.hist-side-promo::before {
+    content: "";
+    position: absolute;
+    inset: -40% -20% auto -20%;
+    height: 90%;
+    background: radial-gradient(ellipse at center,
+        rgba(70, 150, 255, 0.20), transparent 70%);
+    filter: blur(16px);
+    pointer-events: none;
+}
+
+.hist-side-promo-icon {
+    position: relative;
+    width: 74px;
+    height: 74px;
+    margin: 0 auto 12px;
+    color: var(--h-blue);
+    opacity: .55;
+    filter: saturate(.7);
+    transition: opacity .3s ease, filter .3s ease, transform .3s ease;
+    animation: hFloat 5s ease-in-out infinite;
+}
+
+.hist-side-promo:hover .hist-side-promo-icon {
+    opacity: 1;
+    filter: saturate(1);
+    transform: scale(1.05);
+}
+
+.hist-side-promo-icon img,
+.hist-side-promo-icon svg { width: 100%; height: 100%; }
+
+.hist-side-promo b {
+    position: relative;
+    display: block;
+    color: var(--h-ink);
+    font-size: .84rem;
+    font-weight: 700;
+    line-height: 1.45;
+}
+
+.hist-side-promo-rule {
+    position: relative;
+    width: 34px;
+    height: 3px;
+    margin: 12px auto 0;
+    border-radius: 3px;
+    background: linear-gradient(90deg, var(--h-blue), var(--h-cyan));
+}
+
+
+/* =========================================================
+   4. HERO
+   ========================================================= */
+
+.hist-hero {
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-height: 232px;
+    padding: 30px 34px;
+    overflow: hidden;
+    background:
+        radial-gradient(circle at 78% 42%, rgba(84, 168, 255, 0.20), transparent 46%),
+        linear-gradient(105deg, #eef5ff 0%, #dfeaff 52%, #cfe2fb 100%);
+    border-bottom: 1px solid var(--h-line);
+    animation: hHeroIn .75s var(--h-ease) both;
+}
+
+[data-theme="dark"] .hist-hero {
+    background:
+        radial-gradient(circle at 78% 42%, rgba(0, 132, 255, 0.28), transparent 48%),
+        linear-gradient(105deg, #061527 0%, #071d38 55%, #04101f 100%);
+}
+
+/* ---- Hero stage: the real supplied artwork (road + city skyline +
+   car + detection frame, already one photo) fills the whole hero,
+   swapped per theme purely in CSS. No CSS-drawn shapes. ---- */
+.hist-hero-stage {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    overflow: hidden;
+}
+
+.hist-hero-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 62% 44%;
+    animation: hKenBurns 16s ease-in-out infinite alternate;
+}
+
+.hist-hero-bg--dark  { display: none; }
+[data-theme="dark"] .hist-hero-bg--light { display: none; }
+[data-theme="dark"] .hist-hero-bg--dark  { display: block; }
+
+/* Soft readability tint so the heading text stays legible over the photo —
+   kept tight to the left/text side so the car+road stays clearly visible. */
+.hist-hero-tint {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    background: linear-gradient(100deg,
+        rgba(238, 245, 255, 0.88) 0%,
+        rgba(238, 245, 255, 0.40) 24%,
+        rgba(238, 245, 255, 0.0) 42%,
+        transparent 100%);
+    pointer-events: none;
+}
+
+[data-theme="dark"] .hist-hero-tint {
+    background: linear-gradient(100deg,
+        rgba(4, 12, 24, 0.86) 0%,
+        rgba(4, 12, 24, 0.40) 24%,
+        rgba(4, 12, 24, 0.0) 42%,
+        transparent 100%);
+}
+
+/* HUD scanning line sweeping across the whole photo */
+.hist-hero-scan {
+    position: absolute;
+    left: 30%;
+    right: 4%;
+    top: 30%;
+    z-index: 3;
+    height: 2px;
+    border-radius: 2px;
+    background: linear-gradient(90deg, transparent,
+        rgba(120, 220, 255, 0.95), transparent);
+    box-shadow: 0 0 14px rgba(90, 210, 255, 0.85);
+    animation: hScan 2.4s ease-in-out infinite;
+}
+
+/* Soft breathing glow behind the detected vehicle for extra "alive" feel */
+.hist-hero-pulse {
+    position: absolute;
+    right: 16%;
+    top: 30%;
+    z-index: 2;
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(90, 180, 255, 0.30), transparent 70%);
+    animation: hGlowBreathe 3.4s ease-in-out infinite;
+    pointer-events: none;
+}
+
+/* Rising light sparkles for extra "wow" over the road */
+.hist-hero-sparkles {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.hist-spark {
+    position: absolute;
+    left: var(--x);
+    bottom: -6%;
+    width: var(--sz, 3px);
+    height: var(--sz, 3px);
+    border-radius: 50%;
+    background: rgba(120, 200, 255, 0.95);
+    box-shadow: 0 0 9px 2px rgba(120, 200, 255, 0.8);
+    animation: hSparkRise var(--sd) ease-in infinite;
+    animation-delay: var(--sdel);
+    opacity: 0;
+}
+
+.hist-hero-content { position: relative; z-index: 4; max-width: 430px; }
+
+.hist-kicker {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 4px;
+    color: var(--h-blue);
+    font-size: .70rem;
+    font-weight: 800;
+    letter-spacing: 2.6px;
+    text-transform: uppercase;
+}
+
+.hist-kicker::after {
+    content: "";
+    width: 28px;
+    height: 2px;
+    border-radius: 2px;
+    background: linear-gradient(90deg, var(--h-blue), transparent);
+}
+
+.hist-hero h1 {
+    margin: 6px 0 10px;
+    font-size: clamp(26px, 2.7vw, 36px);
+    line-height: 1.12;
+    font-weight: 800;
+    letter-spacing: -1px;
+    color: var(--h-ink);
+}
+
+.hist-hero h1 span {
+    background: linear-gradient(92deg, #3b7cff, #35c9ff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.hist-hero p {
+    max-width: 330px;
+    margin: 0;
+    color: var(--h-muted);
+    font-size: .82rem;
+    line-height: 1.7;
+}
+
+
+/* =========================================================
+   5. CONTENT SHELL (below the hero)
+   ========================================================= */
+
+.hist-body { padding: 20px 24px 26px; }
+
+/* Nested columns: list | right rail */
+.vvh-split + div[data-testid="stHorizontalBlock"] {
+    align-items: flex-start !important;
+    gap: 22px !important;
+}
+
+
+/* =========================================================
+   6. SEARCH
+   ========================================================= */
+
+div[class*="st-key-vvh-search"] [data-testid="stTextInput"] input {
+    height: 46px !important;
+    padding-left: 42px !important;
+    border-radius: 13px !important;
+    border: 1px solid var(--h-line) !important;
+    background: var(--h-panel-2) !important;
+    color: var(--h-ink) !important;
+    font-size: .82rem !important;
+    box-shadow: none !important;
+    transition: border-color .25s ease, box-shadow .25s ease,
+                background .25s ease !important;
+    animation: hCardGlow 4.2s ease-in-out infinite !important;
+}
+
+/* Magnifier glyph drawn on the wrapper so the input stays a real widget. */
+div[class*="st-key-vvh-search"] [data-testid="stTextInput"] { position: relative; }
+
+div[class*="st-key-vvh-search"] [data-testid="stTextInput"]::before {
+    content: "";
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    z-index: 3;
+    width: 15px;
+    height: 15px;
+    transform: translateY(-50%);
+    pointer-events: none;
+    border: 2px solid var(--h-muted);
+    border-radius: 50%;
+    opacity: .75;
+    animation: hIconPulseCentered 3.4s ease-in-out infinite;
+}
+
+div[class*="st-key-vvh-search"] [data-testid="stTextInput"]::after {
+    content: "";
+    position: absolute;
+    left: 26px;
+    top: 58%;
+    z-index: 3;
+    width: 7px;
+    height: 2px;
+    pointer-events: none;
+    background: var(--h-muted);
+    border-radius: 2px;
+    transform: rotate(45deg);
+    opacity: .75;
+}
+
+div[class*="st-key-vvh-search"] [data-testid="stTextInput"] input:focus {
+    border-color: rgba(47, 107, 255, 0.55) !important;
+    background: var(--h-panel) !important;
+    box-shadow: 0 0 0 3px rgba(47, 107, 255, 0.12),
+                0 10px 26px rgba(47, 107, 255, 0.10) !important;
+}
+
+div[class*="st-key-vvh-search"] [data-testid="stTextInput"] input::placeholder {
+    color: var(--h-muted) !important;
+    opacity: .8 !important;
+}
+
+
+/* =========================================================
+   7. FILTERS
+   ========================================================= */
+
+div[class*="st-key-vvh-filter"] div[data-baseweb="select"] > div {
+    min-height: 46px !important;
+    border-radius: 13px !important;
+    border: 1px solid var(--h-line) !important;
+    background-color: var(--h-panel-2) !important;
+    background: var(--h-panel-2) !important;
+    color: var(--h-ink) !important;
+    font-size: .80rem !important;
+    transition: border-color .25s ease, box-shadow .25s ease !important;
+    animation: hCardGlow 4.2s ease-in-out infinite 1.4s !important;
+}
+
+div[class*="st-key-vvh-filter"] div[data-baseweb="select"] > div:hover {
+    border-color: rgba(47, 107, 255, 0.45) !important;
+    box-shadow: 0 8px 20px rgba(47, 107, 255, 0.10) !important;
+}
+
+/* BaseWeb nests several extra divs/spans inside the select; force every
+   one of them transparent so none of them shows a hard-coded white. */
+div[class*="st-key-vvh-filter"] div[data-baseweb="select"],
+div[class*="st-key-vvh-filter"] div[data-baseweb="select"] *,
+div[class*="st-key-vvh-filter"] [data-testid="stSelectbox"],
+div[class*="st-key-vvh-filter"] [data-testid="stSelectbox"] * {
+    background-color: transparent !important;
+    color: var(--h-ink) !important;
+}
+
+/* ...then re-apply the panel colour on the one visible outer box only. */
+div[class*="st-key-vvh-filter"] div[data-baseweb="select"] > div {
+    background-color: var(--h-panel-2) !important;
+}
+
+div[class*="st-key-vvh-filter"] div[data-baseweb="select"] svg { fill: var(--h-muted) !important; }
+
+[data-theme="dark"] div[class*="st-key-vvh-filter"] div[data-baseweb="select"] > div {
+    background-color: #0d1f38 !important;
+    background: #0d1f38 !important;
+    border-color: rgba(120, 170, 255, 0.22) !important;
+}
+
+[data-theme="dark"] div[class*="st-key-vvh-search"] [data-testid="stTextInput"] input {
+    background: #0d1f38 !important;
+    border-color: rgba(120, 170, 255, 0.22) !important;
+}
+
+[data-theme="dark"] div[data-baseweb="popover"] [role="listbox"],
+[data-theme="dark"] div[data-baseweb="menu"] {
+    background: #0b1a2e !important;
+    border: 1px solid var(--h-line) !important;
+}
+
+[data-theme="dark"] div[data-baseweb="popover"] li,
+[data-theme="dark"] div[data-baseweb="menu"] li { color: #eaf4ff !important; }
+
+[data-theme="dark"] div[data-baseweb="popover"] li:hover,
+[data-theme="dark"] div[data-baseweb="menu"] li:hover { background: #132844 !important; }
+
+
+/* =========================================================
+   8. TIMELINE
+   ========================================================= */
+
+.hist-rows { position: relative; padding-left: 26px; margin-top: 16px; }
+
+/* The vertical glowing rail */
+.hist-rows::before {
+    content: "";
+    position: absolute;
+    left: 7px;
+    top: 26px;
+    bottom: 26px;
+    width: 2px;
+    border-radius: 2px;
+    background: linear-gradient(to bottom,
+        rgba(47, 107, 255, 0.05),
+        rgba(47, 107, 255, 0.45) 18%,
+        rgba(54, 214, 255, 0.45) 82%,
+        rgba(54, 214, 255, 0.05));
+    box-shadow: 0 0 12px rgba(47, 140, 255, 0.28);
+    animation: hRailGlow 4.5s ease-in-out infinite;
+}
+
+.hist-node {
+    position: absolute;
+    left: -26px;
+    top: 34px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 32%, #8fd8ff, #2f6bff 62%);
+    box-shadow: 0 0 0 4px rgba(47, 107, 255, 0.14),
+                0 0 14px rgba(70, 180, 255, 0.70);
+    animation: hNodePulse 2.6s ease-in-out infinite;
+}
+
+
+/* =========================================================
+   9. HISTORY CARDS
+   ========================================================= */
+
+div[class*="st-key-vvh-item-"] { position: relative; margin-bottom: 12px !important; }
+
+div[class*="st-key-vvh-row-"] {
+    position: relative;
+    padding: 12px 14px !important;
+    border-radius: var(--h-radius);
+    overflow: hidden;
+    background: var(--h-panel);
+    border: 1px solid var(--h-line);
+    box-shadow: var(--h-shadow);
+    transition: transform .32s var(--h-ease),
+                box-shadow .32s ease,
+                border-color .32s ease !important;
+    animation: hRowIn .55s var(--h-ease) both;
+}
+
+[data-theme="dark"] div[class*="st-key-vvh-row-"] {
+    background: linear-gradient(145deg, #0c1c31, #091524);
+}
+
+/* Slow shimmer sweep so the cards never look static */
+div[class*="st-key-vvh-row-"]::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background: linear-gradient(110deg,
+        transparent 42%, rgba(120, 190, 255, 0.10) 50%, transparent 58%);
+    background-size: 260% 100%;
+    animation: hShimmer 6s ease-in-out infinite;
+}
+
+div[class*="st-key-vvh-row-"]:nth-of-type(2)::before { animation-delay: .5s; }
+div[class*="st-key-vvh-row-"]:nth-of-type(3)::before { animation-delay: 1s; }
+div[class*="st-key-vvh-row-"]:nth-of-type(4)::before { animation-delay: 1.5s; }
+div[class*="st-key-vvh-row-"]:nth-of-type(5)::before { animation-delay: 2s; }
+
+/* Border glow sweep on hover */
+div[class*="st-key-vvh-row-"]::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: var(--h-radius);
+    pointer-events: none;
+    box-shadow: inset 0 0 0 1px rgba(70, 170, 255, 0);
+    transition: box-shadow .32s ease;
+}
+
+div[class*="st-key-vvh-row-"]:hover {
+    transform: translateY(-3px);
+    border-color: rgba(60, 155, 255, 0.40);
+    box-shadow: var(--h-shadow-lift),
+                0 0 26px rgba(50, 150, 255, 0.10);
+}
+
+div[class*="st-key-vvh-row-"]:hover::after {
+    box-shadow: inset 0 0 0 1px rgba(70, 170, 255, 0.35);
+}
+
+/* Staggered entrance — six steps is plenty for one page. */
+div[class*="st-key-vvh-row-"] { animation-delay: .04s; }
+div[class*="st-key-vvh-item-"]:nth-of-type(2) div[class*="st-key-vvh-row-"] { animation-delay: .10s; }
+div[class*="st-key-vvh-item-"]:nth-of-type(3) div[class*="st-key-vvh-row-"] { animation-delay: .16s; }
+div[class*="st-key-vvh-item-"]:nth-of-type(4) div[class*="st-key-vvh-row-"] { animation-delay: .22s; }
+div[class*="st-key-vvh-item-"]:nth-of-type(5) div[class*="st-key-vvh-row-"] { animation-delay: .28s; }
+
+.hist-row {
+    display: grid;
+    grid-template-columns: 96px minmax(180px, 1fr) auto;
+    align-items: center;
+    gap: 16px;
+}
+
+/* --- thumbnail --- */
+.hist-thumb {
+    position: relative;
+    width: 96px;
+    height: 72px;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #dfe8f4;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.35);
+}
+
+.hist-thumb img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform .45s var(--h-ease);
+}
+
+div[class*="st-key-vvh-row-"]:hover .hist-thumb img { transform: scale(1.09); }
+
+/* Small VQA speech-bubble chip, as on the red car in the reference */
+.hist-thumb-chip {
+    position: absolute;
+    right: 5px;
+    bottom: 5px;
+    display: grid;
+    place-items: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 7px;
+    background: linear-gradient(135deg, #3b7cff, #2558e6);
+    color: #fff;
+    font-size: .62rem;
+    box-shadow: 0 4px 12px rgba(20, 70, 170, 0.40);
+}
+
+/* --- text block --- */
+.hist-info { min-width: 0; }
+
+.hist-info-title {
+    margin-bottom: 6px;
+    color: var(--h-ink);
+    font-size: .88rem;
+    font-weight: 750;
+    letter-spacing: -.2px;
+}
+
+.hist-meta {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin-top: 3px;
+    color: var(--h-muted);
+    font-size: .72rem;
+    font-weight: 500;
+}
+
+.hist-meta em {
+    flex: 0 0 auto;
+    font-style: normal;
+    opacity: .7;
+    font-size: .74rem;
+}
+
+.hist-meta b { color: var(--h-ink); font-weight: 650; }
+
+/* --- status + arrow --- */
+.hist-tail {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.hist-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 13px;
+    border-radius: 999px;
+    white-space: nowrap;
+    background: var(--h-ok-bg);
+    border: 1px solid var(--h-ok-line);
+    color: var(--h-ok-text);
+    font-size: .70rem;
+    font-weight: 700;
+    animation: hBadgeBreathe 3.6s ease-in-out infinite;
+}
+
+.hist-status i { font-style: normal; font-size: .72rem; }
+
+
+/* =========================================================
+   10. ROW ACTIONS (view / pdf / delete)
+   ========================================================= */
+
+/* Chevron button = "View result" */
+div[class*="st-key-vvh-go-"] button {
+    width: 34px !important;
+    min-width: 34px !important;
+    height: 34px !important;
+    min-height: 34px !important;
+    padding: 0 !important;
+    border-radius: 50% !important;
+    background: rgba(47, 107, 255, 0.08) !important;
+    border: 1px solid transparent !important;
+    color: var(--h-blue) !important;
+    font-size: .95rem !important;
+    box-shadow: none !important;
+    transition: transform .25s var(--h-ease),
+                background .25s ease, color .25s ease !important;
+}
+
+div[class*="st-key-vvh-row-"]:hover div[class*="st-key-vvh-go-"] button {
+    background: linear-gradient(135deg, #3b7cff, #2558e6) !important;
+    color: #fff !important;
+    transform: translateX(3px);
+    box-shadow: 0 8px 18px rgba(47, 107, 255, 0.34) !important;
+}
+
+/* Overflow menu keeps PDF + delete reachable without breaking the design. */
+div[class*="st-key-vvh-more-"] button {
+    width: 30px !important;
+    min-width: 30px !important;
+    height: 34px !important;
+    min-height: 34px !important;
+    padding: 0 !important;
+    border-radius: 10px !important;
+    background: transparent !important;
+    border: 1px solid transparent !important;
+    color: var(--h-muted) !important;
+    font-size: .95rem !important;
+    box-shadow: none !important;
+    opacity: .55;
+    transition: opacity .25s ease, background .25s ease, color .25s ease !important;
+}
+
+div[class*="st-key-vvh-row-"]:hover div[class*="st-key-vvh-more-"] button {
+    opacity: 1;
+    background: rgba(47, 107, 255, 0.07) !important;
+    color: var(--h-blue) !important;
+}
+
+div[class*="st-key-vvh-more-"] [data-testid="stPopoverBody"] button {
+    width: 100% !important;
+    justify-content: flex-start !important;
+    border-radius: 9px !important;
+    font-size: .76rem !important;
+}
+
+
+/* =========================================================
+   11. PAGINATION
+   ========================================================= */
+
+.hist-pager { margin-top: 6px; }
+
+div[class*="st-key-vvh-pg-"] button {
+    width: 32px !important;
+    min-width: 32px !important;
+    height: 32px !important;
+    min-height: 32px !important;
+    padding: 0 !important;
+    border-radius: 9px !important;
+    background: transparent !important;
+    border: 1px solid var(--h-line) !important;
+    color: var(--h-muted) !important;
+    font-size: .76rem !important;
+    font-weight: 700 !important;
+    box-shadow: none !important;
+    transition: all .22s ease !important;
+}
+
+div[class*="st-key-vvh-pg-"] button:hover:not(:disabled) {
+    border-color: rgba(47, 107, 255, 0.45) !important;
+    color: var(--h-blue) !important;
+    transform: translateY(-2px);
+}
+
+div[class*="st-key-vvh-pg-"][class*="-on"] button {
+    background: linear-gradient(135deg, #3b7cff, #2558e6) !important;
+    border-color: transparent !important;
+    color: #fff !important;
+    box-shadow: 0 8px 18px rgba(47, 107, 255, 0.32) !important;
+    animation: hNavGlow 3s ease-in-out infinite;
+}
+
+
+/* =========================================================
+   12. QUICK STATS
+   ========================================================= */
+
+.hist-rail-title {
+    margin: 2px 0 12px;
+    color: var(--h-ink);
+    font-size: .92rem;
+    font-weight: 800;
+    letter-spacing: -.3px;
+}
+
+.hist-stat-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.hist-stat {
+    position: relative;
+    padding: 14px;
+    border-radius: 14px;
+    overflow: hidden;
+    background: var(--h-panel-2);
+    border: 1px solid var(--h-line);
+    transition: transform .28s var(--h-ease),
+                box-shadow .28s ease, border-color .28s ease;
+    animation: hFadeUp .6s var(--h-ease) both,
+               hCardGlow 3.6s ease-in-out infinite;
+}
+
+[data-theme="dark"] .hist-stat { background: #0b1a2e; }
+
+.hist-stat:nth-child(2) { animation-delay: .06s, .5s; }
+.hist-stat:nth-child(3) { animation-delay: .12s, 1.0s; }
+.hist-stat:nth-child(4) { animation-delay: .18s, 1.5s; }
+
+.hist-stat::before {
+    content: "";
+    position: absolute;
+    right: -46px;
+    top: -52px;
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    pointer-events: none;
+    background: radial-gradient(circle, rgba(47, 107, 255, 0.13), transparent 70%);
+    animation: hGlowBreathe 3.6s ease-in-out infinite;
+}
+
+/* Shimmer sweep travelling across the card every few seconds */
+.hist-stat::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(115deg,
+        transparent 40%, rgba(120, 190, 255, 0.16) 50%, transparent 60%);
+    background-size: 260% 100%;
+    animation: hShimmer 4.5s ease-in-out infinite;
+}
+
+.hist-stat:hover {
+    transform: translateY(-4px);
+    border-color: rgba(60, 155, 255, 0.38);
+    box-shadow: 0 14px 30px rgba(30, 95, 175, 0.13);
+}
+
+.hist-stat-icon {
+    display: grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    margin-bottom: 12px;
+    border-radius: 9px;
+    background: rgba(47, 107, 255, 0.11);
+    border: 1px solid rgba(47, 107, 255, 0.18);
+    color: var(--h-blue);
+    font-size: .82rem;
+    transition: transform .28s var(--h-ease), box-shadow .28s ease;
+    animation: hIconPulse 3.2s ease-in-out infinite;
+}
+
+.hist-stat:nth-child(2)  .hist-stat-icon { animation-delay: .3s; }
+.hist-stat:nth-child(3)  .hist-stat-icon { animation-delay: .6s; }
+.hist-stat:nth-child(4)  .hist-stat-icon { animation-delay: .9s; }
+
+.hist-stat:hover .hist-stat-icon {
+    transform: scale(1.16) translateY(-1px);
+    box-shadow: 0 0 18px rgba(47, 140, 255, 0.28);
+}
+
+.hist-stat-value {
+    color: var(--h-ink);
+    font-size: 1.32rem;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.hist-stat-label {
+    margin-top: 5px;
+    color: var(--h-muted);
+    font-size: .68rem;
+    font-weight: 600;
+    line-height: 1.35;
+}
+
+
+/* =========================================================
+   13. RECENT ACTIVITY
+   ========================================================= */
+
+.hist-activity { margin-top: 22px; }
+
+.hist-act {
+    display: flex;
+    align-items: flex-start;
+    gap: 11px;
+    padding: 9px 0;
+    animation: hFadeUp .6s var(--h-ease) both;
+}
+
+.hist-act:nth-child(3) { animation-delay: .07s; }
+.hist-act:nth-child(4) { animation-delay: .14s; }
+
+.hist-act-icon {
+    display: grid;
+    place-items: center;
+    flex: 0 0 30px;
+    width: 30px;
+    height: 30px;
+    border-radius: 9px;
+    background: rgba(47, 107, 255, 0.10);
+    border: 1px solid rgba(47, 107, 255, 0.16);
+    color: var(--h-blue);
+    font-size: .78rem;
+}
+
+.hist-act-text {
+    color: var(--h-ink);
+    font-size: .73rem;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+.hist-act-time {
+    margin-top: 2px;
+    color: var(--h-muted);
+    font-size: .66rem;
+}
+
+
+/* =========================================================
+   14. AI KEEPS LEARNING CARD
+   ========================================================= */
+
+.hist-ai {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 20px;
+    padding: 16px;
+    overflow: hidden;
+    border-radius: 16px;
+    background: linear-gradient(120deg,
+        rgba(59, 124, 255, 0.10),
+        rgba(54, 214, 255, 0.05));
+    border: 1px solid rgba(59, 124, 255, 0.22);
+    animation: hFadeUp .7s var(--h-ease) .2s both;
+}
+
+[data-theme="dark"] .hist-ai {
+    background: linear-gradient(120deg, #0b2647, #0a1c34);
+    border-color: rgba(70, 175, 255, 0.24);
+}
+
+/* Ambient glow that slowly drifts */
+.hist-ai::before {
+    content: "";
+    position: absolute;
+    right: -60px;
+    top: -60px;
+    width: 190px;
+    height: 190px;
+    border-radius: 50%;
+    pointer-events: none;
+    background: radial-gradient(circle, rgba(60, 160, 255, 0.24), transparent 68%);
+    filter: blur(8px);
+    animation: hAiGlow 6s ease-in-out infinite;
+}
+
+/* Shimmer sweep */
+.hist-ai::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(100deg, transparent 38%,
+        rgba(255, 255, 255, 0.16) 50%, transparent 62%);
+    background-size: 260% 100%;
+    animation: hShimmer 5.5s ease-in-out infinite;
+}
+
+.hist-ai-orb {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    place-items: center;
+    flex: 0 0 34px;
+    width: 34px;
+    height: 34px;
+    border-radius: 11px;
+    background: linear-gradient(135deg, #3b7cff, #2558e6);
+    color: #fff;
+    font-size: .92rem;
+    box-shadow: 0 8px 20px rgba(47, 107, 255, 0.35);
+    animation: hPulse 2.8s ease-in-out infinite;
+}
+
+.hist-ai-body { position: relative; z-index: 2; }
+
+.hist-ai-body h3 {
+    margin: 0 0 3px;
+    color: var(--h-ink);
+    font-size: .80rem;
+    font-weight: 750;
+}
+
+.hist-ai-body p {
+    margin: 0;
+    color: var(--h-muted);
+    font-size: .67rem;
+    line-height: 1.45;
+}
+
+/* Rising trend line in the corner (as in the reference) */
+.hist-ai-spark {
+    position: absolute;
+    right: 12px;
+    bottom: 10px;
+    z-index: 2;
+    width: 56px;
+    height: 26px;
+    pointer-events: none;
+    opacity: .75;
+}
+
+.hist-ai-spark path {
+    fill: none;
+    stroke: var(--h-blue);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 90;
+    stroke-dashoffset: 90;
+    animation: hSparkDraw 3.4s var(--h-ease) infinite;
+}
+
+
+/* =========================================================
+   15. EMPTY STATE
+   ========================================================= */
+
+.hist-empty {
+    margin: 22px 0;
+    padding: 52px 28px;
+    text-align: center;
+    border-radius: 20px;
+    background: var(--h-panel-2);
+    border: 1px dashed rgba(60, 140, 210, 0.26);
+}
+
+.hist-empty-icon {
+    display: grid;
+    place-items: center;
+    width: 66px;
+    height: 66px;
+    margin: 0 auto;
+    border-radius: 50%;
+    background: rgba(47, 107, 255, 0.09);
+    color: var(--h-blue);
+    font-size: 1.7rem;
+    animation: hPulse 2.4s ease-in-out infinite;
+}
+
+.hist-empty h3 { margin: 16px 0 6px; color: var(--h-ink); font-size: 1rem; }
+.hist-empty p  { margin: 0; color: var(--h-muted); font-size: .78rem; }
+
+
+/* =========================================================
+   16. ANIMATIONS
+   ========================================================= */
+
+@keyframes hShellIn {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes hHeroIn {
+    from { opacity: 0; transform: translateY(12px) scale(.992); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes hFadeUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes hRowIn {
+    from { opacity: 0; transform: translateY(14px) scale(.985); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes hPulse {
+    0%, 100% { transform: scale(1);    opacity: 1; }
+    50%      { transform: scale(1.07); opacity: .82; }
+}
+
+@keyframes hFloat {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-6px); }
+}
+
+@keyframes hAmbientDrift {
+    0%, 100% { transform: translate(0, 0)   scale(1);    opacity: 1; }
+    50%      { transform: translate(4%, -6%) scale(1.08); opacity: .75; }
+}
+
+@keyframes hParticleTwinkle {
+    0%, 100% { opacity: .5; }
+    50%      { opacity: 1; }
+}
+
+@keyframes hCardGlow {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(47, 107, 255, 0.0); }
+    50%      { box-shadow: 0 0 22px 0 rgba(47, 107, 255, 0.16); }
+}
+
+@keyframes hGlowBreathe {
+    0%, 100% { opacity: .5;  transform: scale(1); }
+    50%      { opacity: 1;   transform: scale(1.18); }
+}
+
+@keyframes hIconPulse {
+    0%, 100% { transform: scale(1);    opacity: 1; }
+    50%      { transform: scale(1.13); opacity: .82; }
+}
+
+@keyframes hIconPulseCentered {
+    0%, 100% { transform: translateY(-50%) scale(1);    opacity: .75; }
+    50%      { transform: translateY(-50%) scale(1.35); opacity: .25; }
+}
+
+@keyframes hTogglePulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(47, 107, 255, 0.0); }
+    50%      { box-shadow: 0 0 0 5px rgba(47, 107, 255, 0.10); }
+}
+
+@keyframes hKenBurns {
+    0%   { transform: scale(1.0)  translateX(0); }
+    100% { transform: scale(1.045) translateX(-1%); }
+}
+
+@keyframes hSparkRise {
+    0%   { transform: translateY(0) scale(.6);    opacity: 0; }
+    12%  { opacity: 1; }
+    100% { transform: translateY(-150px) scale(1); opacity: 0; }
+}
+
+@keyframes hBadgeBreathe {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+    50%      { box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.09); }
+}
+
+@keyframes hNodePulse {
+    0%, 100% { box-shadow: 0 0 0 4px rgba(47, 107, 255, 0.14), 0 0 12px rgba(70, 180, 255, 0.55); }
+    50%      { box-shadow: 0 0 0 6px rgba(47, 107, 255, 0.06), 0 0 20px rgba(70, 180, 255, 0.85); }
+}
+
+@keyframes hRailGlow {
+    0%, 100% { opacity: .78; }
+    50%      { opacity: 1; }
+}
+
+@keyframes hScan {
+    0%   { top: 12%; opacity: 0; }
+    12%  { opacity: 1; }
+    88%  { opacity: 1; }
+    100% { top: 88%; opacity: 0; }
+}
+
+@keyframes hNavGlow {
+    0%, 100% { box-shadow: 0 10px 24px rgba(47, 107, 255, 0.32), 0 0 0 1px rgba(90, 150, 255, 0.20); }
+    50%      { box-shadow: 0 10px 28px rgba(47, 107, 255, 0.42), 0 0 20px rgba(90, 170, 255, 0.28); }
+}
+
+@keyframes hAiGlow {
+    0%, 100% { transform: translate(0, 0)      scale(1); opacity: .85; }
+    50%      { transform: translate(-12px, 8px) scale(1.08); opacity: 1; }
+}
+
+@keyframes hShimmer {
+    0%, 55%  { background-position: 150% 0; }
+    100%     { background-position: -50% 0; }
+}
+
+@keyframes hSparkDraw {
+    0%       { stroke-dashoffset: 90; }
+    45%, 75% { stroke-dashoffset: 0; }
+    100%     { stroke-dashoffset: 0; opacity: .3; }
+}
+
+/* Respect the OS setting — no motion, no layout shift. */
+@media (prefers-reduced-motion: reduce) {
+    .hist-hero, .hist-hero-bg, .hist-hero-scan, .hist-hero-pulse, .hist-spark,
+    .hist-node,
+    .hist-rows::before, .hist-status, .hist-ai::before, .hist-ai::after,
+    .hist-ai-orb, .hist-ai-spark path, .hist-side-promo-icon, .hist-side-promo,
+    .hist-stat, .hist-stat-icon, .hist-stat::before, .hist-stat::after,
+    .hist-act, div[class*="st-key-vvh-row-"], div[class*="st-key-vvh-row-"]::before,
+    div[class*="st-key-vvh-nav-"] button::before,
+    div[class*="st-key-vvh-sidebar-toggle"] button,
+    div[class*="st-key-vvh-pg-"][class*="-on"] button,
+    div[class*="st-key-vvh-search"] [data-testid="stTextInput"] input,
+    div[class*="st-key-vvh-search"] [data-testid="stTextInput"]::before,
+    div[class*="st-key-vvh-filter"] div[data-baseweb="select"] > div,
+    div[class*="st-key-vvh-nav-"][class*="-on"] button {
+        animation: none !important;
+    }
+    div[class*="st-key-vvh-row-"]:hover,
+    .hist-stat:hover { transform: none !important; }
+}
+
+
+/* =========================================================
+   17. RTL (Arabic)
+   ========================================================= */
+
+[dir="rtl"] .hist-hero { flex-direction: row-reverse; }
+[dir="rtl"] .hist-hero-content { text-align: right; }
+[dir="rtl"] .hist-kicker { flex-direction: row-reverse; }
+[dir="rtl"] .hist-kicker::after {
+    background: linear-gradient(270deg, var(--h-blue), transparent);
+}
+[dir="rtl"] .hist-hero-bg    { object-position: center 38%; transform: scaleX(-1); }
+
+[dir="rtl"] .hist-rows { padding-left: 0; padding-right: 26px; }
+[dir="rtl"] .hist-rows::before { left: auto; right: 7px; }
+[dir="rtl"] .hist-node { left: auto; right: -26px; }
+
+[dir="rtl"] .hist-row { direction: rtl; }
+[dir="rtl"] .hist-thumb-chip { right: auto; left: 5px; }
+[dir="rtl"] .hist-ai-spark { right: auto; left: 12px; transform: scaleX(-1); }
+
+[dir="rtl"] div[class*="st-key-vvh-nav-"] button {
+    justify-content: flex-start !important;
+    text-align: right !important;
+    flex-direction: row-reverse !important;
+}
+[dir="rtl"] div[class*="st-key-vvh-nav-"] button:hover { transform: translateX(-3px); }
+[dir="rtl"] div[class*="st-key-vvh-row-"]:hover div[class*="st-key-vvh-go-"] button {
+    transform: translateX(-3px);
+}
+
+[dir="rtl"] div[class*="st-key-vvh-search"] [data-testid="stTextInput"] input {
+    padding-left: 14px !important;
+    padding-right: 42px !important;
+    text-align: right;
+}
+[dir="rtl"] div[class*="st-key-vvh-search"] [data-testid="stTextInput"]::before {
+    left: auto; right: 15px;
+}
+[dir="rtl"] div[class*="st-key-vvh-search"] [data-testid="stTextInput"]::after {
+    left: auto; right: 26px; transform: rotate(-45deg);
+}
+
+[dir="rtl"] .vv-hist-scope + div[data-testid="stHorizontalBlock"]
+> div[data-testid="column"]:first-child {
+    border-right: 0;
+    border-left: 1px solid var(--h-line);
+}
+
+
+/* =========================================================
+   18. RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1080px) {
+    .hist-hero { min-height: 160px; }
+    .hist-hero-bg { object-position: center 30%; }
+    .hist-hero-content { max-width: 100%; }
+    .hist-row { grid-template-columns: 82px 1fr auto; gap: 12px; }
+    .hist-thumb { width: 82px; height: 62px; }
+    .hist-status { display: none; }
+}
+
+@media (max-width: 760px) {
+    .vv-hist-scope + div[data-testid="stHorizontalBlock"]
+    > div[data-testid="column"]:first-child {
+        min-height: 0;
+        border-right: 0;
+        border-bottom: 1px solid var(--h-line);
+    }
+    .hist-body { padding: 16px 14px 20px; }
+    .hist-hero { padding: 22px 18px; }
+    .hist-hero h1 { font-size: 24px; }
+    .hist-rows { padding-left: 18px; }
+    .hist-node { left: -18px; }
+    .hist-row { grid-template-columns: 66px 1fr auto; }
+    .hist-thumb { width: 66px; height: 52px; }
+    .hist-stat-grid { grid-template-columns: 1fr 1fr; }
+}

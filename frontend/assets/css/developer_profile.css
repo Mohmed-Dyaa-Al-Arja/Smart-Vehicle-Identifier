@@ -1,9 +1,157 @@
 /* ==========================================================================
-   Profile / Team photo
+   VEHICLE VISION AI — DEVELOPER PROFILE PAGE
+   Same visual language as the rest of the site
    ========================================================================== */
 
-.profile-card { text-align: center; transition: .3s; }
-.profile-card:hover { transform: translateY(-6px); }
-.profile-avatar { width: 120px; height: 120px; font-size: 42px; margin-bottom: 24px; }
-.profile-card h2 { color: white; margin-bottom: 8px; }
 
+/* ==========================================================================
+   BACKGROUND WASH
+   ========================================================================== */
+
+[data-testid="stAppViewContainer"] .main .block-container {
+    background:
+        radial-gradient(900px 500px at 10% -10%, rgba(37, 99, 235, 0.08), transparent 65%),
+        radial-gradient(800px 450px at 100% 0%, rgba(14, 165, 233, 0.07), transparent 60%);
+    transition: background 0.4s ease;
+}
+
+[data-theme="dark"] [data-testid="stAppViewContainer"] .main .block-container {
+    background:
+        radial-gradient(1000px 550px at 8% -12%, rgba(37, 99, 235, 0.16), transparent 65%),
+        radial-gradient(850px 500px at 100% 0%, rgba(14, 165, 233, 0.12), transparent 60%);
+}
+
+
+/* ==========================================================================
+   HEADER (badge + name + role, next to the "Back" button)
+   ========================================================================== */
+
+.hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 13px;
+    margin: 0 0 10px;
+    border-radius: 999px;
+    background: rgba(37, 99, 235, 0.08);
+    border: 1px solid rgba(37, 99, 235, 0.18);
+    color: var(--color-primary, #2563EB);
+    font-size: 0.67rem;
+    font-weight: 800;
+    letter-spacing: 0.25px;
+    text-transform: uppercase;
+}
+
+.hero-title {
+    margin: 0 0 4px;
+    color: var(--color-text-primary, #0F172A);
+    font-size: 1.65rem;
+    font-weight: 800;
+    line-height: 1.25;
+    letter-spacing: -0.3px;
+}
+
+.hero-description {
+    margin: 0;
+    color: var(--color-text-secondary, #64748B);
+    font-size: 0.85rem;
+    font-weight: 650;
+}
+
+
+/* ==========================================================================
+   PROFILE CARD (left column: photo/avatar + name + role)
+   ========================================================================== */
+
+.profile-card {
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.profile-card:hover {
+    transform: translateY(-6px);
+}
+
+.profile-card h2 {
+    margin: 0 0 4px;
+    color: var(--color-text-primary, #0F172A);
+    font-size: 1.25rem;
+    font-weight: 800;
+}
+
+
+/* ==========================================================================
+   PHOTO / AVATAR — fixed-size box for every developer
+   ========================================================================== */
+
+.profile-visual {
+    width: 100%;
+    max-width: 220px;
+    height: 220px;
+    margin: 0 auto 24px;
+    border-radius: 50%;
+    overflow: hidden;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 4px solid rgba(255, 255, 255, 0.9);
+    box-shadow: 0 12px 30px rgba(37, 99, 235, 0.25);
+}
+
+.profile-visual img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.profile-visual-letter {
+    background: linear-gradient(145deg, #1D4ED8, #2563EB 52%, #38BDF8);
+    color: #FFFFFF;
+    font-size: 64px;
+    font-weight: 800;
+}
+
+[data-theme="dark"] .profile-visual {
+    border-color: rgba(7, 21, 36, 0.95);
+}
+
+
+/* ==========================================================================
+   ROLE PILL (under the name, on the profile card)
+   ========================================================================== */
+
+.developer-role {
+    display: inline-block;
+    margin: 8px 0 0;
+    padding: 5px 12px;
+    border-radius: 999px;
+    color: #1762D4;
+    background: rgba(37, 99, 235, 0.075);
+    border: 1px solid rgba(37, 99, 235, 0.16);
+    font-size: 0.73rem;
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+[data-theme="dark"] .developer-role {
+    color: #66A8FF;
+    background: rgba(37, 99, 235, 0.10);
+    border-color: rgba(74, 144, 255, 0.22);
+}
+
+
+/* ==========================================================================
+   RTL / ARABIC
+   ========================================================================== */
+
+html[dir="rtl"] .hero-title,
+html[dir="rtl"] .hero-description,
+html[dir="rtl"] .hero-badge {
+    text-align: right;
+}
+
+html[dir="rtl"] .profile-card {
+    direction: rtl;
+}

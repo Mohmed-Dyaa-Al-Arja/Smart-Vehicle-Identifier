@@ -2,7 +2,7 @@
 setlocal
 
 set "ROOT=%~dp0"
-set "VENV=%ROOT%.venv"
+set "VENV=%ROOT%frontend\.venv"
 set "BACKEND=%ROOT%backend"
 set "FRONTEND=%ROOT%frontend"
 

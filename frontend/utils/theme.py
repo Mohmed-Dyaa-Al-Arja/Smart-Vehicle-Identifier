@@ -56,18 +56,36 @@ def load_css(page_css: str | None = None) -> None:
 
     # This tiny iframe's script is what actually executes in the browser.
     components.html(
-        f"""
-        <script>
-            (function() {{
-                const doc = window.parent.document;
-                doc.documentElement.setAttribute('data-theme', '{theme}');
-                doc.documentElement.setAttribute('dir', '{direction}');
-                doc.documentElement.setAttribute('lang', '{lang}');
-                doc.body.setAttribute('data-theme', '{theme}');
-                doc.body.setAttribute('dir', '{direction}');
-            }})();
-        </script>
-        """,
-        height=0,
-        width=0,
-    )
+    f"""
+    <script>
+        const doc = window.parent.document;
+
+        doc.documentElement.setAttribute(
+            'data-theme',
+            '{theme}'
+        );
+
+        doc.documentElement.setAttribute(
+            'dir',
+            '{direction}'
+        );
+
+        doc.documentElement.setAttribute(
+            'lang',
+            '{lang}'
+        );
+
+        doc.body.setAttribute(
+            'data-theme',
+            '{theme}'
+        );
+
+        doc.body.setAttribute(
+            'dir',
+            '{direction}'
+        );
+    </script>
+    """,
+    height=0,
+    width=0,
+)

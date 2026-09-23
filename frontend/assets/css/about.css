@@ -1,1 +1,383 @@
-/* about: no page-exclusive CSS in the original theme. Shared styles are in global.css. */
+/* =========================================================
+   Smart Vehicle Identifier — About page
+   Sections: 1. Variables/base  2. Hero  3. Feature pills
+   4. Vision + Platform row  5. Platform feature cards
+   6. Animations  7. Dark mode  8. RTL  9. Responsive
+   ========================================================= */
+
+:root {
+    --a-blue: #2f6bff;
+    --a-cyan: #36d6ff;
+    --a-ink: #0b1220;
+    --a-muted: #64748b;
+    --a-panel: #ffffff;
+    --a-panel-2: #f3f7ff;
+    --a-line: rgba(15, 35, 70, 0.10);
+    --a-shadow: 0 10px 26px rgba(20, 55, 110, 0.07);
+    --a-radius: 16px;
+    --a-ease: cubic-bezier(.22, 1, .36, 1);
+}
+
+[data-theme="dark"] {
+    --a-ink: #eaf2ff;
+    --a-muted: #93a7c7;
+    --a-panel: #0b1a2e;
+    --a-panel-2: #0d1f38;
+    --a-line: rgba(120, 170, 255, 0.14);
+    --a-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
+}
+
+.vv-abt-scope + div[data-testid="stVerticalBlock"] {
+    color: var(--a-ink);
+}
+
+.abt-section {
+    animation: aFadeUp .7s var(--a-ease) both;
+}
+
+
+/* =========================================================
+   2. HERO
+   ========================================================= */
+
+.abt-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: rgba(47, 107, 255, 0.12);
+    border: 1px solid rgba(47, 107, 255, 0.25);
+    color: var(--a-blue);
+    font-size: .72rem;
+    font-weight: 800;
+    letter-spacing: .4px;
+    margin-bottom: 16px;
+    animation: aFadeUp .6s var(--a-ease) both;
+}
+
+.abt-title {
+    font-size: clamp(28px, 3.2vw, 42px);
+    font-weight: 800;
+    line-height: 1.18;
+    letter-spacing: -1px;
+    margin: 0 0 16px;
+    color: var(--a-ink);
+    animation: aFadeUp .65s var(--a-ease) .05s both;
+}
+
+.abt-title span {
+    background: linear-gradient(92deg, #3b7cff, #35c9ff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 200% 100%;
+    animation: aGradientShift 6s ease-in-out infinite;
+}
+
+.abt-desc {
+    color: var(--a-muted);
+    font-size: .95rem;
+    line-height: 1.8;
+    max-width: 520px;
+    margin: 0 0 26px;
+    animation: aFadeUp .7s var(--a-ease) .1s both;
+}
+
+.abt-hero-img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: var(--a-radius);
+    box-shadow: 0 20px 50px rgba(20, 60, 140, 0.22);
+    animation: aFadeUp .8s var(--a-ease) .1s both, aHeroFloat 6s ease-in-out infinite 1s;
+}
+
+.abt-hero-dark { display: block; }
+.abt-hero-light { display: none; }
+[data-theme="dark"] .abt-hero-dark { display: block; }
+[data-theme="dark"] .abt-hero-light { display: none; }
+[data-theme="light"] .abt-hero-dark,
+:root:not([data-theme="dark"]) .abt-hero-dark { display: none; }
+:root:not([data-theme="dark"]) .abt-hero-light { display: block; }
+
+
+/* =========================================================
+   3. FEATURE PILLS (row under the description)
+   ========================================================= */
+
+.abt-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 22px;
+    animation: aFadeUp .75s var(--a-ease) .18s both;
+}
+
+.abt-pill {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-size: .74rem;
+    font-weight: 600;
+    color: var(--a-ink);
+}
+
+.abt-pill-icon {
+    display: grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    flex: none;
+    border-radius: 9px;
+    background: rgba(47, 107, 255, 0.12);
+    color: var(--a-blue);
+    font-size: .88rem;
+    animation: aIconPulse 3s ease-in-out infinite;
+}
+
+.abt-pills .abt-pill:nth-child(2) .abt-pill-icon { animation-delay: .3s; }
+.abt-pills .abt-pill:nth-child(3) .abt-pill-icon { animation-delay: .6s; }
+.abt-pills .abt-pill:nth-child(4) .abt-pill-icon { animation-delay: .9s; }
+
+.abt-pill-label { line-height: 1.35; opacity: .88; }
+
+
+/* =========================================================
+   4. VISION CARD + PLATFORM SECTION (side by side)
+   ========================================================= */
+
+.abt-vision {
+    position: relative;
+    height: 100%;
+    min-height: 230px;
+    border-radius: var(--a-radius);
+    overflow: hidden;
+    border: 1px solid var(--a-line);
+    box-shadow: var(--a-shadow);
+    animation: aFadeUp .7s var(--a-ease) .1s both,
+               aCardGlow 3.6s ease-in-out infinite .3s;
+    transition: transform .35s var(--a-ease), box-shadow .35s ease;
+}
+
+.abt-vision:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 22px 44px rgba(20, 60, 140, 0.24);
+}
+
+/* Complete, pre-composed artwork (photo + title + copy + play button
+   baked in per language) — swapped by theme only; language is already
+   picked in Python since the page re-renders per language anyway. */
+.abt-vision-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.abt-vision-img--dark  { display: block; }
+.abt-vision-img--light { display: none; }
+[data-theme="dark"] .abt-vision-img--dark  { display: block; }
+[data-theme="dark"] .abt-vision-img--light { display: none; }
+:root:not([data-theme="dark"]) .abt-vision-img--dark  { display: none; }
+:root:not([data-theme="dark"]) .abt-vision-img--light { display: block; }
+
+.abt-vision-missing {
+    position: absolute;
+    z-index: 4;
+    left: 12px;
+    top: 12px;
+    padding: 6px 10px;
+    border-radius: 8px;
+    background: rgba(255, 190, 60, 0.16);
+    border: 1px solid rgba(255, 190, 60, 0.4);
+    color: #ffcf6a;
+    font-size: .68rem;
+    font-weight: 600;
+}
+
+.abt-vision-missing--dark  { display: block; }
+.abt-vision-missing--light { display: none; }
+[data-theme="dark"] .abt-vision-missing--dark  { display: block; }
+[data-theme="dark"] .abt-vision-missing--light { display: none; }
+:root:not([data-theme="dark"]) .abt-vision-missing--dark  { display: none; }
+:root:not([data-theme="dark"]) .abt-vision-missing--light { display: block; }
+
+.abt-platform {
+    height: 100%;
+    padding: 6px 4px;
+    animation: aFadeUp .75s var(--a-ease) .16s both;
+}
+
+.abt-kicker {
+    color: var(--a-blue);
+    font-size: .68rem;
+    font-weight: 800;
+    letter-spacing: 2.4px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+
+.abt-platform-title {
+    font-size: 1.28rem;
+    font-weight: 800;
+    color: var(--a-ink);
+    margin: 0 0 12px;
+    line-height: 1.3;
+}
+
+.abt-platform-desc {
+    color: var(--a-muted);
+    font-size: .84rem;
+    line-height: 1.8;
+    margin: 0 0 20px;
+    max-width: 480px;
+}
+
+
+/* =========================================================
+   5. PLATFORM FEATURE CARDS (2x2 grid)
+   ========================================================= */
+
+.abt-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+.abt-card {
+    position: relative;
+    overflow: hidden;
+    padding: 16px;
+    border-radius: 14px;
+    background: var(--a-panel-2);
+    border: 1px solid var(--a-line);
+    transition: transform .3s var(--a-ease), box-shadow .3s ease, border-color .3s ease;
+    animation: aFadeUp .6s var(--a-ease) both, aCardGlow 4s ease-in-out infinite;
+}
+
+.abt-grid .abt-card:nth-child(1) { animation-delay: 0s, 0s; }
+.abt-grid .abt-card:nth-child(2) { animation-delay: .08s, .5s; }
+.abt-grid .abt-card:nth-child(3) { animation-delay: .16s, 1s; }
+.abt-grid .abt-card:nth-child(4) { animation-delay: .24s, 1.5s; }
+
+.abt-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(115deg,
+        transparent 42%, rgba(120, 190, 255, 0.14) 50%, transparent 58%);
+    background-size: 260% 100%;
+    animation: aShimmer 5s ease-in-out infinite;
+}
+
+.abt-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(60, 155, 255, 0.4);
+    box-shadow: 0 14px 28px rgba(30, 95, 175, 0.14);
+}
+
+.abt-card-icon {
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    margin-bottom: 10px;
+    border-radius: 9px;
+    background: rgba(47, 107, 255, 0.13);
+    color: var(--a-blue);
+    font-size: .9rem;
+    animation: aIconPulse 3.2s ease-in-out infinite;
+}
+
+.abt-card-title {
+    font-size: .84rem;
+    font-weight: 700;
+    color: var(--a-ink);
+    margin-bottom: 5px;
+}
+
+.abt-card-desc {
+    font-size: .74rem;
+    color: var(--a-muted);
+    line-height: 1.6;
+}
+
+
+/* =========================================================
+   6. ANIMATIONS
+   ========================================================= */
+
+@keyframes aFadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes aGradientShift {
+    0%, 100% { background-position: 0% 50%; }
+    50%      { background-position: 100% 50%; }
+}
+
+@keyframes aHeroFloat {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-8px); }
+}
+
+@keyframes aIconPulse {
+    0%, 100% { transform: scale(1);    opacity: 1; }
+    50%      { transform: scale(1.13); opacity: .82; }
+}
+
+@keyframes aPlayPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(255,255,255,.35); }
+    50%      { box-shadow: 0 0 0 10px rgba(255,255,255,0); }
+}
+
+@keyframes aCardGlow {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(47,107,255,0); }
+    50%      { box-shadow: 0 0 20px 0 rgba(47,107,255,.16); }
+}
+
+@keyframes aShimmer {
+    0%, 55% { background-position: 150% 0; }
+    100%    { background-position: -50% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .abt-badge, .abt-title, .abt-title span, .abt-desc, .abt-hero-img,
+    .abt-pills, .abt-pill-icon, .abt-vision,
+    .abt-platform, .abt-card, .abt-card::after, .abt-card-icon {
+        animation: none !important;
+    }
+}
+
+
+/* =========================================================
+   7. DARK MODE polish
+   ========================================================= */
+
+[data-theme="dark"] .abt-pill-icon,
+[data-theme="dark"] .abt-card-icon {
+    background: rgba(90, 160, 255, 0.16);
+}
+
+
+/* =========================================================
+   8. RTL (Arabic)
+   ========================================================= */
+
+[dir="rtl"] .abt-desc,
+[dir="rtl"] .abt-platform-desc { max-width: 100%; }
+
+[dir="rtl"] .abt-kicker { letter-spacing: 0; }
+
+
+/* =========================================================
+   9. RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1100px) {
+    .abt-grid { grid-template-columns: 1fr; }
+    .abt-pills { gap: 16px; }
+}

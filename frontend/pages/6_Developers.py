@@ -1,4 +1,5 @@
-import textwrap
+import base64
+from pathlib import Path
 
 import streamlit as st
 
@@ -8,11 +9,21 @@ from utils.i18n import init_lang, t
 from utils.developers import DEVELOPERS
 from components.navigation import render_navbar
 
+
+# ============================================================================
+# PAGE CONFIG
+# ============================================================================
+
 st.set_page_config(
     page_title="Developers | Vehicle Vision AI",
     layout="wide",
     initial_sidebar_state="collapsed",
 )
+
+
+# ============================================================================
+# INITIALIZATION
+# ============================================================================
 
 init_session()
 init_theme()
@@ -21,109 +32,188 @@ load_css("developers")
 
 render_navbar(active="nav_developers")
 
-# ==========================================================
-# HEADER
-# ==========================================================
+language = st.session_state.get("lang", "en")
 
-st.markdown(
-    textwrap.dedent(f"""\
-    <div style="margin-bottom:30px;">
-        <h1 class="hero-title" style="font-size:2.6rem;margin-bottom:8px;">
-            Our <span>Developers</span>
+_PAGES_DIR = Path(__file__).resolve().parent
+
+
+def display_name(dev: dict) -> str:
+    """Arabic name when the UI language is Arabic and one is set,
+    otherwise fall back to the English name."""
+
+    if language == "ar" and dev.get("name_ar"):
+        return dev["name_ar"]
+
+    return dev["name"]
+
+
+def get_photo_data_uri(photo_path: Path) -> str:
+    """Base64-encode a local photo so it can render as a plain <img> tag
+    inside the fixed-size avatar circle (same approach as the profile
+    page), instead of st.image() which doesn't fit a fixed CSS box."""
+
+    if not photo_path.exists():
+        return ""
+
+    suffix = photo_path.suffix.lower()
+
+    mime_types = {
+        ".png": "image/png",
+        ".jpg": "image/jpeg",
+        ".jpeg": "image/jpeg",
+        ".webp": "image/webp",
+        ".gif": "image/gif",
+    }
+
+    mime = mime_types.get(suffix, "image/png")
+
+    encoded = base64.b64encode(
+        photo_path.read_bytes()
+    ).decode("utf-8")
+
+    return f"data:{mime};base64,{encoded}"
+
+
+# ============================================================================
+# HEADER
+# ============================================================================
+
+st.html(
+    f"""
+    <div class="vv-dev-badge">
+        <span class="vv-dev-badge-icon">✦</span>
+        {t("nav_developers")}
+    </div>
+
+    <div class="vv-dev-header">
+
+        <h1 class="vv-dev-title">
+            Our <span class="vv-dev-title-gradient">Developers</span>
         </h1>
-        <p class="hero-description" style="max-width:700px;margin-bottom:0;">
+
+        <p class="vv-dev-desc">
             {t("developers_subtitle")}
         </p>
+
     </div>
-    """),
-    unsafe_allow_html=True,
+    """
 )
 
-# ==========================================================
-# DEVELOPERS
-# ==========================================================
 
-cols = st.columns(4)
+# ============================================================================
+# DEVELOPERS GRID
+# ============================================================================
+
+cols = st.columns(4, gap="medium")
+
+
+MAX_VISIBLE_SKILLS = 6
+
 
 for i, (col, dev) in enumerate(zip(cols, DEVELOPERS)):
 
     with col:
 
-        avatar = dev["name"][0].upper()
+        with st.container(key=f"vv-dev-card-{i}"):
 
-        skills_html = "".join(
-            f'<span class="vv-badge vv-badge-primary">{skill}</span>'
-            for skill in dev["skills"]
-        )
+            name = display_name(dev)
 
-        st.markdown(
-            textwrap.dedent(f"""\
-            <div class="vv-card developer-card">
-                <div class="developer-avatar">
-                    {avatar}
+            photo_file = (
+                _PAGES_DIR / "img" / Path(dev.get("photo", "")).name
+            )
+
+            has_photo = (
+                bool(dev.get("photo"))
+                and photo_file.exists()
+            )
+
+            if has_photo:
+
+                photo_uri = get_photo_data_uri(photo_file)
+
+                avatar_inner = (
+                    f'<img src="{photo_uri}" alt="{name}" />'
+                )
+
+                avatar_class = "vv-dev-avatar vv-dev-avatar-photo"
+
+            else:
+
+                avatar_inner = name[0].upper()
+                avatar_class = "vv-dev-avatar"
+
+            visible_skills = dev["skills"][:MAX_VISIBLE_SKILLS]
+            extra_count = len(dev["skills"]) - len(visible_skills)
+
+            skills_html = "".join(
+                f'<span class="vv-dev-skill">{skill}</span>'
+                for skill in visible_skills
+            )
+
+            if extra_count > 0:
+                skills_html += (
+                    f'<span class="vv-dev-skill '
+                    f'vv-dev-skill-more">+{extra_count}</span>'
+                )
+
+            st.html(
+                f"""
+                <div class="{avatar_class}">
+                    {avatar_inner}
                 </div>
-                <div class="developer-name">
-                    {dev["name"]}
+
+                <div class="vv-dev-name">
+                    {name}
                 </div>
-                <div class="developer-role">
+
+                <div class="vv-dev-role" title="{dev["role"]}">
                     {dev["role"]}
                 </div>
-                <div class="developer-bio">
+
+                <div class="vv-dev-bio">
                     {dev["bio"]}
                 </div>
-                <div class="developer-skills">
+
+                <div class="vv-dev-skills">
                     {skills_html}
                 </div>
-            </div>
-            """),
-            unsafe_allow_html=True,
-        )
+                """
+            )
 
-        if st.button(
-            f"👤 {t('view_profile')}",
-            key=f"developer_{i}",
-            use_container_width=True,
-        ):
-            st.session_state.selected_developer = i
-            st.switch_page("pages/7_Developer_Profile.py")
+            if st.button(
+                f"👤  {t('view_profile')}",
+                key=f"developer_{i}",
+                use_container_width=True,
+            ):
+                st.session_state.selected_developer = i
+                st.switch_page("pages/7_Developer_Profile.py")
 
-# ==========================================================
-# TEAM PHOTO
-# ==========================================================
 
-st.write("")
 
-center1, center2, center3 = st.columns([1, 1.2, 1])
+# ============================================================================
+# BOTTOM TEAM BANNER
+# ============================================================================
 
-with center2:
+st.html(
+    f"""
+    <div class="vv-dev-banner">
 
-    if st.button(
-        f"📷 {t('view_team_photo')}",
-        use_container_width=True,
-    ):
-        st.switch_page("pages/8_Team_Photo.py")
-
-# ==========================================================
-# BOTTOM BANNER
-# ==========================================================
-
-st.markdown("<br>", unsafe_allow_html=True)
-
-st.markdown(
-    textwrap.dedent(f"""\
-    <div class="vv-card" style="display:flex;align-items:center;gap:20px;padding:28px;">
-        <div style="font-size:40px;">
+        <div class="vv-dev-banner-icon">
             🚀
         </div>
-        <div>
-            <h3 style="margin:0;">
+
+        <div class="vv-dev-banner-content">
+
+            <h3>
                 {t("team_tagline_title")}
             </h3>
-            <p class="vv-text-secondary" style="margin-top:6px;margin-bottom:0;">
+
+            <p>
                 {t("team_tagline_desc")}
             </p>
+
         </div>
+
     </div>
-    """),
-    unsafe_allow_html=True,
+    """
 )
